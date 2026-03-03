@@ -1,0 +1,162 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+    height: 53px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1128px;
+    height: 100%;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-search {
+    display: flex;
+    align-items: center;
+    background-color: #edf3f8;
+    border-radius: 20px;
+    padding: 0 8px;
+    height: 34px;
+    width: 280px;
+    border: 1px solid gray;
+}
+
+
+.linkedin-logo-in {
+    background-color: #0a66c2;
+    color: #ffffff;
+    border-radius: 4px;
+    padding: 0 4px;
+    margin-left: 2px;
+    margin-right:5px ;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.search-icon {
+    color: #666666;
+    margin-right: 8px;
+    font-size: 20px !important;
+}
+
+.navbar-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #000;
+}
+
+.navbar-search input::placeholder {
+    color: #666666;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+    text-decoration: none;
+    min-width: 80px;
+    height: 52px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: #191919;
+}
+
+.nav-item.active {
+    border-bottom: 2px solid #191919;
+}
+
+.nav-icon {
+    font-size: 24px !important;
+}
+
+.nav-text {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.profile-icon {
+    border-radius: 50%;
+}
+
+.navbar-divider {
+    width: 1px;
+    height: 100%;
+    background-color: #e0e0e0;
+    margin: 0 10px;
+}
+
+.premium-link {
+    min-width: auto;
+    max-width: 120px;
+    text-align: center;
+}
+
+.premium-link a {
+    color: #915907;
+    font-size: 12px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+    display: block;
+    line-height: 1.2;
+}
+
+.premium-link a:hover {
+    text-decoration-color: #915907;
+}
+
+.dummy-button {
+    margin-left: 16px;
+    background-color: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 6px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dummy-button:hover {
+    background-color: #004182;
+}
