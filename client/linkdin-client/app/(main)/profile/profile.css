@@ -1,0 +1,265 @@
+.profile-container {
+    max-width: 1128px;
+    margin: 20px auto;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.profile-main {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+   
+
+.profile-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 300px;
+}
+
+.profile-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    padding-bottom: 24px;
+}
+
+.profile-banner {
+    height: 200px;
+    background-color: #a0b4b7;
+    display: flex;
+    justify-content: end;
+}
+
+.profile-background-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 20px;
+    background-color: white;
+    color: black;
+    height: 40px;
+    width: 40px;
+}
+
+.profile-info {
+    padding: 0 24px;
+    position: relative;
+    margin-top: -60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    background-color: #0a66c2;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #000000;
+}
+
+.profile-headline {
+    font-size: 16px;
+    color: #000000;
+    margin: 4px 0;
+}
+
+.profile-location {
+    font-size: 14px;
+    color: #666666;
+    margin: 4px 0;
+}
+
+.edit-profile-icon{
+    margin-top:85px;
+    color: black;
+}
+
+.edit-profile-icon:hover{
+    cursor: pointer;
+
+}
+
+.profile-card-options {
+    width: 100%;
+    height: auto;
+    padding-left: 20px;
+    margin-top:20px ;
+}
+
+.option-1 {
+    background-color: #0a66c2;
+    color: white;
+    padding: 7px 10px;
+    border-radius: 20px;
+    margin-right:10px ;
+    font-weight: bold;
+    border: 1px solid #0a66c2;
+}
+
+.option-2 {
+    background-color: #f3f3f4;
+    color: #0a66c2;
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    border: 1px solid #0a66c2;
+    margin-right:10px ;
+}
+
+.profile-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 24px;
+}
+.profile-section-header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+.edit-profile-section{
+    display: flex;
+    justify-content: space-between;
+    color: black;
+}
+
+.edit-profile-section-icon{
+    margin-left: 20px;
+}
+
+.experience-item,
+.education-item {
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 16px;
+}
+
+.experience-item:last-child,
+.education-item:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    width: 100%;
+}
+
+.item-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #000000;
+}
+
+.item-subtitle {
+    font-size: 14px;
+    color: #000000;
+    margin: 4px 0;
+}
+
+.item-date {
+    font-size: 14px;
+    color: #666666;
+    margin: 4px 0;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag {
+    background-color: #f3f2ef;
+    color: #000000;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #666666;
+}
+
+.skill-tag:hover {
+    background-color: #e0e0e0;
+}
+
+.sidebar-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 24px;
+}
+
+.sidebar-section {
+    position: relative;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar-section:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.sidebar-section-icon{
+    color: black;
+}
+
+
+.sidebar-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #191919;
+}
+
+.sidebar-subtitle {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .profile-sidebar {
+        min-width: auto;
+    }
+}

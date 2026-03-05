@@ -4,9 +4,12 @@ import { current } from "@reduxjs/toolkit";
 
 export interface User {
   id?: number | string;
+  firebase_id:string;
   email: string;
-  username?: string;
-  role:string
+  fullname?: string | null;
+  image:string| null ;
+  coverimage:string|null;
+  description:string|null;
 }
 
 interface AuthState {
@@ -84,7 +87,7 @@ const authSlice = createSlice({
         console.log("working login ",action.payload)
         state.loading = false;
         state.isLoggedIn = true;
-        // state.currentUser = action.payload;
+        state.currentUser = action.payload.user;
         state.error = null;
         
       })
@@ -114,7 +117,7 @@ const authSlice = createSlice({
         console.log("data is in google payload",action.payload)
         state.loading = false;
         state.isLoggedIn = true;
-        // state.currentUser = action.payload.user;
+        state.currentUser = action.payload.user;
         state.error = null;
       })
       .addCase(googleLogin.rejected, (state, action: any) => {

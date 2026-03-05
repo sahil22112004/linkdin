@@ -1,4 +1,10 @@
 import './feed.css';
+import { FcVideoCall } from "react-icons/fc";
+import { HiOutlinePhoto } from "react-icons/hi2";
+import { MdOutlineArticle } from "react-icons/md";
+
+
+
 
 export default function Dashboard() {
     return (
@@ -9,15 +15,14 @@ export default function Dashboard() {
                     <div className="profile-avatar">S</div>
                     <h2 className="profile-name">Sahil Kondal</h2>
                     <p className="profile-headline">Software Engineer</p>
-                    <div className="profile-stats">
-                        <div className="stat">
-                            <span>Profile viewers</span>
-                            <span className="stat-number">45</span>
-                        </div>
-                        <div className="stat">
-                            <span>Connections</span>
-                            <span className="stat-number">500+</span>
-                        </div>
+                </div>
+                <div className="profile-stats">
+                    <div className="stat">
+                        <span>Profile viewers</span>
+                        <span className="stat-number">10</span>
+                    </div>
+                    <div className="stat">
+                        <span>View all analytics </span>
                     </div>
                 </div>
             </aside>
@@ -29,9 +34,9 @@ export default function Dashboard() {
                         <button className="start-post-btn">Start a post</button>
                     </div>
                     <div className="create-post-actions">
-                        <button className="post-action-btn media-btn">📸 Media</button>
-                        <button className="post-action-btn event-btn">📅 Event</button>
-                        <button className="post-action-btn article-btn">📝 Write article</button>
+                        <button className="post-action-btn media-btn"><FcVideoCall size={25} /> Video</button>
+                        <button className="post-action-btn event-btn"><HiOutlinePhoto size={25} color='#0a66c2' /> Photo</button>
+                        <button className="post-action-btn article-btn"><MdOutlineArticle size={25} color='#e33b3b' /> Write article</button>
                     </div>
                 </div>
 
@@ -87,8 +92,8 @@ export default function Dashboard() {
                     </ul>
                 </div>
                 <div className="ad-card">
-                    <p className="ad-text">Ad</p>
-                    <p className="ad-content">Take your career to the next level with our premium courses!</p>
+                    <p className="ad-text">promoted...</p>
+                    <p className="ad-content">promotion</p>
                 </div>
             </aside>
         </main>

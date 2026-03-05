@@ -7,6 +7,7 @@ import { User } from './domain/entities/user.entity';
 import { config } from "dotenv";
 import { GoogleLoginModule } from './feature/google-login/google-login.module';
 import { loginModule } from './feature/login-user/loginUser.module';
+import { UpdateUserProfileModule } from './feature/update-user-profile/update-user-profile.module';
 
 
 config()
@@ -25,7 +26,8 @@ config()
     }),
     registerUserModule,
     GoogleLoginModule,
-    loginModule],
+    loginModule,
+  UpdateUserProfileModule],
   controllers: [AppController],
   providers: [AppService],
 })
