@@ -4,9 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import CloseIcon from '@mui/icons-material/Close';
 import './editProfileModal.css';
-import { AppDispatch, RootState } from '../../../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { apiUpdateProfile } from '../../../../services/profileApi';
+import { apiUpdateProfile } from '../../services/profileApi';
 
 
 const profileSchema = z.object({

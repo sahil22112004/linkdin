@@ -1,0 +1,157 @@
+.post-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 48px;
+    z-index: 1000;
+}
+
+.post-modal {
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 744px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.post-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.post-modal-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-modal-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #0a66c2;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.post-modal-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.post-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666666;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-modal-close:hover {
+    background-color: #f3f2ef;
+}
+
+.post-modal-body {
+    padding: 16px 24px;
+    position: relative;
+}
+
+.post-modal-textarea {
+    width: 100%;
+    min-height: 150px;
+    border: none;
+    resize: none;
+    font-size: 16px;
+    font-family: inherit;
+    color: #000000;
+    outline: none;
+}
+
+.post-modal-textarea::placeholder {
+    color: #666666;
+}
+
+.post-media-preview {
+    margin-top: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.post-media-preview img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.post-media-preview video {
+    width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+}
+
+.post-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px 16px;
+}
+
+.post-modal-footer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.post-modal-submit-btn {
+    background-color: #0a66c2;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.post-modal-submit-btn:hover {
+    background-color: #004182;
+}
+
+.post-action-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+}
+
+.post-action-btn:hover {
+    background-color: #f3f2ef;
+}
+
+.emojiBox {
+    position: absolute;
+    z-index: 10;
+}

@@ -2,6 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostModule } from './feature/post/post.module';
+import { config } from "dotenv"
+import { Post } from './domain/entities/post.entity';
+import { GetPostModule } from './feature/get-post/get-post.module';
+
+config();
 
 
 @Module({
@@ -13,10 +19,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: ['./src/domain/entities/*.ts'],
+      entities: [Post],
       synchronize: false,
-    }),],
+    }),
+    PostModule,
+    GetPostModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -7,7 +7,7 @@ import { IoMdAdd } from "react-icons/io";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useState } from 'react';
-import EditProfileModal from './components/editprofileModal/editProfileModal';
+import EditProfileModal from '../../components/editprofileModal/editProfileModal';
 
 
 
