@@ -39,7 +39,7 @@ export default function Navbar() {
                         <BusinessCenterIcon className="nav-icon" />
                         <span className="nav-text">Jobs</span>
                     </Link>
-                    <Link href="" className="nav-item">
+                    <Link href="/messages" className="nav-item">
                         <TextsmsIcon className="nav-icon" />
                         <span className="nav-text">Messaging</span>
                     </Link>

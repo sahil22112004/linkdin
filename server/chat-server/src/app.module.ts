@@ -2,14 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostModule } from './feature/post/post.module';
-import { config } from "dotenv"
-import { Post } from './domain/entities/post.entity';
-import { GetPostModule } from './feature/get-post/get-post.module';
-import { LikesModule } from './feature/likes/likes.module';
-import { Like } from './domain/entities/like.entity';
-
-config();
+import { Message } from './domain/enitites/chat.entity';
 
 
 @Module({
@@ -21,12 +14,10 @@ config();
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Post,Like],
+      entities: [Message],
       synchronize: false,
     }),
-    PostModule,
-    GetPostModule,
-    LikesModule],
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

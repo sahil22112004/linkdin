@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GoogleAuthDto } from '../../domain/dto/googleUser.dto';
 import { User } from '../../domain/entities/user.entity';
-import { adminAuth } from '../../infra/firebase/firebaseAdmin';
+import { adminAuth } from '../../infrastructure/firebase/firebaseAdmin';
 import { Repository } from 'typeorm';
 
 @Injectable()

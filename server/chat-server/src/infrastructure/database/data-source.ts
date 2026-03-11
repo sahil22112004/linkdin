@@ -13,7 +13,7 @@ const datasource :DataSourceOptions & SeederOptions={
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [],
-  migrations: ['./src/infra/database/migrations/*.ts'],
+  migrations: ['./src/infrastructure/database/migrations/*.ts'],
   synchronize: false, 
   seeds: [],
 }
