@@ -14,7 +14,7 @@ import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { googleLogin, registerUser } from '../../redux/slices/authSlics';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -28,12 +28,26 @@ type SignupSchema = z.infer<typeof signupSchema>;
 
 export default function Signup() {
 
+
+
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch<AppDispatch>();
     const [showPassword, setShowPassword] = useState(false);
-     const { loading, isLoggedIn, currentUser,error } = useSelector((state: RootState) => state.auth)
-    
+    const { loading, isLoggedIn, currentUser, error } = useSelector((state: RootState) => state.auth)
+
+    useEffect(() => {
+        if (currentUser && !error && isLoggedIn) {
+
+            router.push('/feed')
+            enqueueSnackbar("Login Success!", { variant: "success" })
+        }
+
+        if (error) {
+            enqueueSnackbar(error, { variant: "error" })
+        }
+    }, [currentUser, error])
+
 
     const {
         control,
@@ -156,7 +170,7 @@ export default function Signup() {
                                     endAdornment: (
                                         <Button
                                             onClick={() => setShowPassword(p => !p)}
-                                            sx={{ color: 'light blue' ,fontWeight: 'fontWeightBold' }}
+                                            sx={{ color: 'light blue', fontWeight: 'fontWeightBold' }}
                                         >
                                             {showPassword ? "Hide" : "Show"}
                                         </Button>
@@ -182,7 +196,7 @@ export default function Signup() {
                         fullWidth
                         disabled={loading}
                     >
-                        {loading?<CircularProgress size={25} color='inherit' />:"Agree & Join"}
+                        {loading ? <CircularProgress size={25} color='inherit' /> : "Agree & Join"}
                     </Button>
                 </form>
 

@@ -18,7 +18,9 @@ export const apiRegister = async (user: any) => {
 export const apiGoogleLogin = async (user: any) => {
   console.log('working');
   try {
-    const response = await axios.post(`${BASE_URL}/google-login`, user);
+    const response = await axios.post(`${BASE_URL}/google-login`, user, {
+      withCredentials: true
+    });
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -30,7 +32,9 @@ export const apiGoogleLogin = async (user: any) => {
 export const apiLogin = async (user: any) => {
   console.log('working');
   try {
-    const response = await axios.post(`${BASE_URL}/auth/login`, user);
+    const response = await axios.post(`${BASE_URL}/auth/login`, user, {
+      withCredentials: true
+    });
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {

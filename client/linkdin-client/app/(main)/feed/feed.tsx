@@ -9,6 +9,17 @@ import PostModal from '@/app/components/post-modal/postModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/redux/store'
 import { getPost } from '@/app/redux/slices/postSlice'
+import { apiLikePost } from '@/app/services/likeApi'
+import { VscThumbsup } from "react-icons/vsc";
+import { BsFillHandThumbsUpFill } from "react-icons/bs";
+import { FaRegCommentDots } from "react-icons/fa";
+import { BiRepost } from "react-icons/bi";
+import { IoIosSend } from "react-icons/io";
+
+
+
+
+
 
 export default function Dashboard() {
 
@@ -20,6 +31,12 @@ export default function Dashboard() {
     useEffect(() => {
         dispatch(getPost('fetch post'))
     }, [])
+
+    const handleLikePost = async (id: any) => {
+        await apiLikePost(id)
+        dispatch(getPost('fetch post'))
+
+    }
 
     return (
         <main className="dashboard-layout">
@@ -127,27 +144,41 @@ export default function Dashboard() {
 
 
                         {item?.media_url && (
-                                <img src={item.media_url} className='postImage' />
+                            <img src={item.media_url} className='postImage' />
                         )}
 
 
-                        <div className="post-actions">
 
-                            <button className="action-btn">
-                                Like
-                            </button>
 
-                            <button className="action-btn">
-                                Comment
-                            </button>
+                        <div className="post-footer">
+                            <div className='like-count'>
+                                {item.likeCount}
+                            </div>
+                            <div className='post-actions'>
+                                <button
+                                    onClick={() => handleLikePost(item.id)}
+                                    className="action-btn"
+                                >
+                                    {item.isLiked ? <BsFillHandThumbsUpFill size={15} /> : <VscThumbsup size={15} />}
+                                    <span>Like</span>
+                                </button>
 
-                            <button className="action-btn">
-                                Repost
-                            </button>
+                                <button className="action-btn">
+                                    <FaRegCommentDots/>
+                                    <span>Comment</span>
+                                </button>
 
-                            <button className="action-btn">
-                                Send
-                            </button>
+                                <button className="action-btn">
+                                    <BiRepost size={20}/>
+                                    <span>Repost</span>
+                                </button>
+
+                                <button className="action-btn">
+                                    <IoIosSend size={20} />
+                                    <span>Send</span>
+                                </button>
+
+                            </div>
 
                         </div>
 

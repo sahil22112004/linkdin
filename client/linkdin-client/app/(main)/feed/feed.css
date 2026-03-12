@@ -240,13 +240,26 @@
     display: flex;
     justify-content: space-evenly;
     padding: 4px 8px;
-    border-top: 1px solid gray ;
-    margin:20px 10px 0px ;
+
+}
+
+
+.like-count{
+    display: flex;
+    border-bottom:1px solid gray ;
     width: 95%;
+    margin: 10px 13px 0px;
+    color: black;
+    font-size: 15px;
+    padding-left:10px ;
 
 }
 
 .action-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     background: none;
     border: none;
     color: #666666;
@@ -257,6 +270,9 @@
     border-radius: 4px;
     flex-grow: 1;
     transition: background-color 0.2s;
+}
+.action-btn span{
+    margin-top :5px ;
 }
 
 .action-btn:hover {

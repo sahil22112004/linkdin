@@ -5,7 +5,9 @@ export interface post {
   id?: number | string;
   post:string;
   media_url:string;
-  createdAt:Date
+  createdAt:Date;
+  likeCount:number;
+  isLiked:boolean
 }
 
 interface AuthState {

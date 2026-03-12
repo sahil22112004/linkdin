@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './feature/post/post.module';
 import { config } from "dotenv"
 import { Post } from './domain/entities/post.entity';
-import { GetPostModule } from './feature/get-post/get-post.module';
 import { LikesModule } from './feature/likes/likes.module';
 import { Like } from './domain/entities/like.entity';
 
@@ -25,7 +24,6 @@ config();
       synchronize: false,
     }),
     PostModule,
-    GetPostModule,
     LikesModule],
   controllers: [AppController],
   providers: [AppService],

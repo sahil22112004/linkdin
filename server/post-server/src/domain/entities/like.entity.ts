@@ -1,18 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Post } from './post.entity';
 
 @Entity('likes')
 export class Like {
+
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ unique: true })
-    post_Id: string;
-
-    @Column({ unique: true })
+    @Column()
     user_Id: string;
 
+    @ManyToOne(() => Post, (post) => post.likes)
+    @JoinColumn({ name: 'post_Id' })
+    post_Id: Post;
+
     @DeleteDateColumn()
-    deletedAt: Date | null
+    deletedAt: Date | null;
 
     @CreateDateColumn({
         type: 'timestamp',

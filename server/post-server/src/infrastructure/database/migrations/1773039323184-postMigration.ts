@@ -25,6 +25,11 @@ export class PostMigration1773039323184 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
+                        name: "user_Id",
+                        type: "varchar",
+                        isNullable: true,
+                    },
+                    {
                         name: "createdAt",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP"
@@ -33,6 +38,7 @@ export class PostMigration1773039323184 implements MigrationInterface {
             }),
             true
         );
+        
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

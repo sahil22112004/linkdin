@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Button, Typography, Link, InputAdornment, IconButton } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,6 +25,19 @@ export default function Login() {
     const dispatch = useDispatch<AppDispatch>();
     const [showPassword, setShowPassword] = useState(false);
     const { loading, isLoggedIn, currentUser, error } = useSelector((state: RootState) => state.auth)
+
+    useEffect(() => {
+    if (currentUser && !error && isLoggedIn ) {
+      
+      router.push('/feed')
+      enqueueSnackbar("Login Success!", { variant: "success" })
+    }
+
+    if (error) {
+      enqueueSnackbar(error, { variant: "error" })
+    }
+  }, [currentUser, error])
+  
 
     const singupschema = z.object({
         email: z.string().min(1, 'Email is required').email("Invalid email format."),

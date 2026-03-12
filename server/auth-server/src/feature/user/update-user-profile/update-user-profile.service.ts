@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { updateUserDto } from 'src/domain/dto/update-userProfile.dto';
-import { User } from '../../domain/entities/user.entity';
+import { User } from '../../../domain/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

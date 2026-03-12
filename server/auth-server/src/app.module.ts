@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { registerUserModule } from './feature/register-user/registerUser.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './domain/entities/user.entity';
 import { config } from "dotenv";
-import { GoogleLoginModule } from './feature/google-login/google-login.module';
-import { loginModule } from './feature/login-user/loginUser.module';
-import { UpdateUserProfileModule } from './feature/update-user-profile/update-user-profile.module';
+import { userModule } from './feature/user/user.module';
+import { authModule } from './feature/auth/auth.module';
 
 
 config()
@@ -24,10 +22,9 @@ config()
       entities: [User],
       synchronize: false,
     }),
-    registerUserModule,
-    GoogleLoginModule,
-    loginModule,
-  UpdateUserProfileModule],
+    authModule,
+    userModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
