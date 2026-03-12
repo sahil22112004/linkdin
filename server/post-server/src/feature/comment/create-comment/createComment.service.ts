@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Comment } from '../../../domain/entities/comment.enitity';
 
 @Injectable()
 export class CreateCommentService {
@@ -8,20 +9,18 @@ export class CreateCommentService {
         @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     ){}
 
-    CreateComment(post_Id:string,Comment_id:string,user:any){
+    async CreateComment(post_Id: string, Comment_id: string, user: any){
 
-        let comment_Id :string|null = null
         const user_Id = user.uid
-        if(Comment_id){
-            comment_Id=Comment_id
-        }
 
         const commentObject = {
             user_Id,
-            post_Id,
-            comment_Id
+            post_Id: { id: post_Id },
+            comment_Id: Comment_id ? { id: Comment_id } : null
         }
-        const Comment = this.commentRepository.create(commentObject)
-        
+
+        const comment = this.commentRepository.create(commentObject)
+
+        return await this.commentRepository.save(comment)
     }
 }

@@ -1,0 +1,142 @@
+.comment-section{
+    padding:12px 16px;
+    border-top:1px solid #e0e0e0;
+    background:#ffffff;
+}
+
+.comment-input{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.comment-input input{
+    flex:1;
+    border:1px solid #d0d0d0;
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:13px;
+    outline:none;
+}
+
+.comment-input input:focus{
+    border-color:#0a66c2;
+}
+
+.comment-input button{
+    background:#0a66c2;
+    color:white;
+    border:none;
+    border-radius:20px;
+    padding:6px 16px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.comment-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.comment-avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#0a66c2;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    font-weight:600;
+}
+
+.comment-avatar.small{
+    width:26px;
+    height:26px;
+    font-size:12px;
+}
+
+.comment-content{
+    flex:1;
+}
+
+.comment-user{
+    font-size:13px;
+    font-weight:600;
+    color:#000;
+}
+
+.comment-text{
+    font-size:13px;
+    color:#444;
+    margin-top:2px;
+}
+
+.comment-actions{
+    margin-top:4px;
+}
+
+.comment-actions button{
+    background:none;
+    border:none;
+    font-size:12px;
+    color:#666;
+    cursor:pointer;
+    padding:0;
+}
+
+.comment-actions button:hover{
+    text-decoration:underline;
+}
+
+.reply-input{
+    display:flex;
+    gap:6px;
+    margin-top:8px;
+    margin-left:30px;
+}
+
+.reply-input input{
+    flex:1;
+    border:1px solid #d0d0d0;
+    border-radius:16px;
+    padding:6px 10px;
+    font-size:12px;
+}
+
+.reply-input button{
+    background:#0a66c2;
+    color:white;
+    border:none;
+    border-radius:14px;
+    padding:5px 12px;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.reply-box{
+    display:flex;
+    gap:8px;
+    margin-top:8px;
+    margin-left:30px;
+}
+
+.load-more-comments,
+.load-replies{
+    background:none;
+    border:none;
+    color:#0a66c2;
+    font-size:13px;
+    cursor:pointer;
+    margin-top:6px;
+    padding:0;
+}
+
+.load-more-comments:hover,
+.load-replies:hover{
+    text-decoration:underline;
+}
