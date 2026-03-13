@@ -10,7 +10,6 @@ import { adminAuth } from './firebaseAdmin';
 export class FirebaseAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log("is token comming ",request.cookies?.token)
     const token = request.cookies?.token;
 
     if (!token) {

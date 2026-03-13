@@ -10,38 +10,55 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/redux/store'
 import { getPost } from '@/app/redux/slices/postSlice'
 import { apiLikePost } from '@/app/services/likeApi'
-import { VscThumbsup } from "react-icons/vsc";
-import { BsFillHandThumbsUpFill } from "react-icons/bs";
-import { FaRegCommentDots } from "react-icons/fa";
-import { BiRepost } from "react-icons/bi";
-import { IoIosSend } from "react-icons/io";
+import { VscThumbsup } from "react-icons/vsc"
+import { BsFillHandThumbsUpFill } from "react-icons/bs"
+import { FaRegCommentDots } from "react-icons/fa"
+import { BiRepost } from "react-icons/bi"
+import { IoIosSend } from "react-icons/io"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { apiCommentPost } from '@/app/services/commentApi'
+import Comment from '@/app/components/comments/comment'
 
+const commentSchema = z.object({
+    comment: z.string().min(1)
+})
 
-
-
-
+type CommentInterface = z.infer<typeof commentSchema>
 
 export default function Dashboard() {
 
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
+    const [openComments, setOpenComments] = useState<string | null>(null)
 
     const dispatch = useDispatch<AppDispatch>()
-    const { loading, error, post } = useSelector((state: RootState) => state.post)
+    const { loading, post } = useSelector((state: RootState) => state.post)
+
+    const { handleSubmit, register, reset } = useForm<CommentInterface>({
+        resolver: zodResolver(commentSchema),
+        defaultValues: { comment: '' }
+    })
 
     useEffect(() => {
         dispatch(getPost('fetch post'))
     }, [])
 
-    const handleLikePost = async (id: any) => {
+    const handleLikePost = async (id: string) => {
         await apiLikePost(id)
         dispatch(getPost('fetch post'))
+    }
 
+    const onSubmit = async (data: CommentInterface, post_id: string) => {
+        await apiCommentPost(post_id, { comment: data.comment })
+        reset()
     }
 
     return (
         <main className="dashboard-layout">
 
             <aside className="left-sidebar">
+
                 <div className="profile-card">
                     <div className="profile-background"></div>
                     <div className="profile-avatar">S</div>
@@ -54,17 +71,17 @@ export default function Dashboard() {
                         <span>Profile viewers</span>
                         <span className="stat-number">10</span>
                     </div>
-
                     <div className="stat">
                         <span>View all analytics</span>
                     </div>
                 </div>
-            </aside>
 
+            </aside>
 
             <section className="main-feed">
 
                 <div className="create-post-card">
+
                     <div className="create-post-input-area">
                         <div className="current-user-avatar">S</div>
 
@@ -89,14 +106,13 @@ export default function Dashboard() {
                             <MdOutlineArticle size={25} color='#e33b3b' /> Write article
                         </button>
                     </div>
-                </div>
 
+                </div>
 
                 <div className="divider">
                     <hr />
                     <span>Sort by: Top</span>
                 </div>
-
 
                 {loading && (
                     <div className="loading">
@@ -104,16 +120,9 @@ export default function Dashboard() {
                     </div>
                 )}
 
-
-                {!loading && post?.length === 0 && (
-                    <div className="loading">
-                        No posts available
-                    </div>
-                )}
-
-
                 {!loading && post?.map((item: any) => (
-                    <div className="dashboard-post" key={item._id}>
+
+                    <div className="dashboard-post" key={item.id}>
 
                         <div className="post-header">
 
@@ -137,39 +146,47 @@ export default function Dashboard() {
 
                         </div>
 
-
                         <div className="post-content">
                             <p>{item?.post}</p>
                         </div>
-
 
                         {item?.media_url && (
                             <img src={item.media_url} className='postImage' />
                         )}
 
-
-
-
                         <div className="post-footer">
+
                             <div className='like-count'>
                                 {item.likeCount}
                             </div>
+
                             <div className='post-actions'>
+
                                 <button
                                     onClick={() => handleLikePost(item.id)}
                                     className="action-btn"
                                 >
-                                    {item.isLiked ? <BsFillHandThumbsUpFill size={15} /> : <VscThumbsup size={15} />}
+                                    {item.isLiked
+                                        ? <BsFillHandThumbsUpFill size={15} />
+                                        : <VscThumbsup size={15} />
+                                    }
                                     <span>Like</span>
                                 </button>
 
-                                <button className="action-btn">
-                                    <FaRegCommentDots/>
+                                <button
+                                    className="action-btn"
+                                    onClick={() =>
+                                        setOpenComments(
+                                            openComments === item.id ? null : item.id
+                                        )
+                                    }
+                                >
+                                    <FaRegCommentDots />
                                     <span>Comment</span>
                                 </button>
 
                                 <button className="action-btn">
-                                    <BiRepost size={20}/>
+                                    <BiRepost size={20} />
                                     <span>Repost</span>
                                 </button>
 
@@ -182,11 +199,34 @@ export default function Dashboard() {
 
                         </div>
 
+                        {openComments === item.id && (
+
+                            <div className='comment-body'>
+
+                                <form
+                                    className="comment-form"
+                                    onSubmit={handleSubmit((data) => onSubmit(data, item.id))}
+                                >
+                                    <input {...register("comment")} placeholder="Write a comment..." />
+                                    <button type="submit">Submit</button>
+                                </form>
+
+                                <div className='comment-section'>
+                                    <Comment
+                                        post_Id={item.id}
+                                        parent_Id={null}
+                                    />
+                                </div>
+
+                            </div>
+
+                        )}
+
                     </div>
+
                 ))}
 
             </section>
-
 
             <aside className="right-sidebar">
 
@@ -232,21 +272,12 @@ export default function Dashboard() {
 
                 </div>
 
-
                 <div className="ad-card">
-
-                    <p className="ad-text">
-                        promoted...
-                    </p>
-
-                    <p className="ad-content">
-                        promotion
-                    </p>
-
+                    <p className="ad-text">promoted...</p>
+                    <p className="ad-content">promotion</p>
                 </div>
 
             </aside>
-
 
             {isPostModalOpen &&
                 <PostModal setIsPostModalOpen={setIsPostModalOpen} />
@@ -255,3 +286,4 @@ export default function Dashboard() {
         </main>
     )
 }
+
