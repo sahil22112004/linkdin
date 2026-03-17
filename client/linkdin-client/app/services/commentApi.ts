@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:4001'
 
-export const apiCommentPost = async (post_id: string,comment_id: string) => {
-    console.log('working', post_id);
+export const apiCommentPost = async (post_id: string, comment:any) => {
+    console.log('working', post_id, "comment is ",comment);
     try {
-        const response = await axios.post(`${BASE_URL}/comment/${post_id}`, { comment_id }, {
+        const response = await axios.post(`${BASE_URL}/comment/${post_id}`,comment, {
             withCredentials: true
         });
         console.log("service", response.data);
@@ -19,12 +19,11 @@ export const apiCommentPost = async (post_id: string,comment_id: string) => {
 export const apiFetchComments = async (
     post_id: string,
     parentId?: string | null,
-    limit: number = 10,
-    offset: number = 0
+    offset: number = 0,
+    limit: number = 10
 ) => {
 
     try {
-
         const response = await axios.get(
             `${BASE_URL}/comment/${post_id}`,
             {

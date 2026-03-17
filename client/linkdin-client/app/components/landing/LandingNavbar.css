@@ -1,0 +1,125 @@
+.landing-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: white;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+}
+
+.landing-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1128px;
+    margin: 0 auto;
+}
+
+.landing-logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.landing-linkedin-text {
+    color: #0077b5;
+}
+
+.landing-linkedin-box {
+    background-color: #0077b5;
+    color: white;
+    padding: 0 4px;
+    border-radius: 4px;
+    margin-left: 2px;
+}
+
+.landing-navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.landing-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.landing-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+    font-weight: 400;
+    transition: color 0.2s;
+}
+
+.landing-nav-item:hover {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.landing-nav-icon {
+    font-size: 24px !important;
+    margin-bottom: 2px;
+}
+
+.landing-navbar-divider {
+    width: 1px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+}
+
+.landing-auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-signin-transparent {
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.75);
+    font-weight: 600;
+    padding: 10px 24px;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+    transition: all 0.2s;
+}
+
+.btn-signin-transparent:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.9);
+}
+
+.btn-join-primary {
+    text-decoration: none;
+    color: white;
+    background-color: #0A66C2;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 24px;
+    transition: background-color 0.2s;
+}
+
+.btn-join-primary:hover {
+    background-color: #004182;
+}
+
+@media (max-width: 992px) {
+    .landing-nav-links {
+        display: none;
+    }
+
+    .landing-navbar-divider {
+        display: none;
+    }
+}

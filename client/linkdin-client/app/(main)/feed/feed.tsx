@@ -10,43 +10,84 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/redux/store'
 import { getPost } from '@/app/redux/slices/postSlice'
 import { apiLikePost } from '@/app/services/likeApi'
-import { VscThumbsup } from "react-icons/vsc";
-import { BsFillHandThumbsUpFill } from "react-icons/bs";
-import { FaRegCommentDots } from "react-icons/fa";
-import { BiRepost } from "react-icons/bi";
-import { IoIosSend } from "react-icons/io";
+import { VscThumbsup } from "react-icons/vsc"
+import { BsFillHandThumbsUpFill } from "react-icons/bs"
+import { FaRegCommentDots } from "react-icons/fa"
+import { BiRepost } from "react-icons/bi"
+import { IoIosSend } from "react-icons/io"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { apiCommentPost } from '@/app/services/commentApi'
+import Comment from '@/app/components/comments/comment'
+import { apirepost } from '@/app/services/postApi'
+import { IoMdBookmark } from "react-icons/io";
+import { MdGroups } from "react-icons/md";
+import { RiNewsLine } from "react-icons/ri";
+import { IoIosCalendar } from "react-icons/io";
+import { useRouter } from 'next/navigation'
+import { fetchUserProfile } from '@/app/redux/slices/authSlics'
 
 
 
 
 
+const commentSchema = z.object({
+    comment: z.string().min(1)
+})
+
+type CommentInterface = z.infer<typeof commentSchema>
 
 export default function Dashboard() {
 
+    const router = useRouter()
+
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
+    const [openComments, setOpenComments] = useState<string | null>(null)
 
     const dispatch = useDispatch<AppDispatch>()
-    const { loading, error, post } = useSelector((state: RootState) => state.post)
+    const { loading, post } = useSelector((state: RootState) => state.post)
+    const { currentUser} = useSelector((state: RootState) => state.auth)
+
+
+    const { handleSubmit, register, reset } = useForm<CommentInterface>({
+        resolver: zodResolver(commentSchema),
+        defaultValues: { comment: '' }
+    })
 
     useEffect(() => {
         dispatch(getPost('fetch post'))
+        dispatch(fetchUserProfile())
     }, [])
 
-    const handleLikePost = async (id: any) => {
+    const handleLikePost = async (id: string) => {
         await apiLikePost(id)
         dispatch(getPost('fetch post'))
+    }
 
+    const onSubmit = async (data: CommentInterface, post_id: string) => {
+        await apiCommentPost(post_id, { comment: data.comment })
+        reset()
+    }
+
+    const handleRePost = async (post_Id: string) => {
+        const res = await apirepost(post_Id)
+        dispatch(getPost('fetch post'))
     }
 
     return (
         <main className="dashboard-layout">
 
             <aside className="left-sidebar">
+
                 <div className="profile-card">
                     <div className="profile-background"></div>
                     <div className="profile-avatar">S</div>
-                    <h2 className="profile-name">Sahil Kondal</h2>
-                    <p className="profile-headline">Software Engineer</p>
+                    <div onClick={()=>router.push('/profile')} >
+                        
+                    <h2 className="profile-name">{currentUser?.fullname?currentUser.fullname:""}</h2>
+                    <p className="profile-headline">{currentUser?.description?currentUser.description:""}</p>
+                    </div>
                 </div>
 
                 <div className="profile-stats">
@@ -54,17 +95,36 @@ export default function Dashboard() {
                         <span>Profile viewers</span>
                         <span className="stat-number">10</span>
                     </div>
-
                     <div className="stat">
                         <span>View all analytics</span>
                     </div>
                 </div>
-            </aside>
+                <div className="profile-stats-1">
+                    <div className="stat-1">
+                        <span className='stat-logo'><IoMdBookmark size={20}/></span>
+                        <span>Saved items</span>
+                        
+                    </div>
+                    <div className="stat-1">
+                        <span className='stat-logo'><MdGroups size={20}/></span>
+                        <span>groups</span>
+                    </div>
+                     <div className="stat-1">
+                        <span className='stat-logo'><RiNewsLine size={20}/></span>
+                        <span>Newsletters</span>
+                    </div>
+                     <div className="stat-1">
+                        <span className='stat-logo'><IoIosCalendar size={20}/></span>
+                        <span>Events</span>
+                    </div>
+                </div>
 
+            </aside>
 
             <section className="main-feed">
 
                 <div className="create-post-card">
+
                     <div className="create-post-input-area">
                         <div className="current-user-avatar">S</div>
 
@@ -89,14 +149,13 @@ export default function Dashboard() {
                             <MdOutlineArticle size={25} color='#e33b3b' /> Write article
                         </button>
                     </div>
-                </div>
 
+                </div>
 
                 <div className="divider">
                     <hr />
                     <span>Sort by: Top</span>
                 </div>
-
 
                 {loading && (
                     <div className="loading">
@@ -104,16 +163,20 @@ export default function Dashboard() {
                     </div>
                 )}
 
-
-                {!loading && post?.length === 0 && (
-                    <div className="loading">
-                        No posts available
-                    </div>
-                )}
-
-
                 {!loading && post?.map((item: any) => (
-                    <div className="dashboard-post" key={item._id}>
+
+                    <div className="dashboard-post" key={item.feedId}>
+                        {item.repostedBy && <span style={{
+                            color: 'black',
+                            margin: '10px 0 0 10px ',
+                            marginTop: '10px',
+                            fontSize: '13px',
+                            display: 'block'
+                        }}>
+                            <span style={{ fontWeight: 'bold' }}>
+                                {item.repostedBy}
+                            </span> reposted this
+                        </span>}
 
                         <div className="post-header">
 
@@ -137,39 +200,54 @@ export default function Dashboard() {
 
                         </div>
 
-
                         <div className="post-content">
                             <p>{item?.post}</p>
                         </div>
 
-
                         {item?.media_url && (
-                            <img src={item.media_url} className='postImage' />
+                            item.media_url.includes("video")
+                                ? <video controls className="postVideo">
+                                    <source src={item.media_url} />
+                                </video>
+                                : <img src={item.media_url} className="postImage" />
                         )}
 
-
-
-
                         <div className="post-footer">
+
                             <div className='like-count'>
                                 {item.likeCount}
                             </div>
+
                             <div className='post-actions'>
+
                                 <button
                                     onClick={() => handleLikePost(item.id)}
                                     className="action-btn"
                                 >
-                                    {item.isLiked ? <BsFillHandThumbsUpFill size={15} /> : <VscThumbsup size={15} />}
+                                    {item.isLiked
+                                        ? <BsFillHandThumbsUpFill size={15} />
+                                        : <VscThumbsup size={15} />
+                                    }
                                     <span>Like</span>
                                 </button>
 
-                                <button className="action-btn">
-                                    <FaRegCommentDots/>
+                                <button
+                                    className="action-btn"
+                                    onClick={() =>
+                                        setOpenComments(
+                                            openComments === item.feedId ? null : item.feedId
+                                        )
+                                    }
+                                >
+                                    <FaRegCommentDots />
                                     <span>Comment</span>
                                 </button>
 
-                                <button className="action-btn">
-                                    <BiRepost size={20}/>
+                                <button
+                                    className="action-btn"
+                                    onClick={() => handleRePost(item.id)}
+                                >
+                                    <BiRepost size={20} />
                                     <span>Repost</span>
                                 </button>
 
@@ -182,11 +260,34 @@ export default function Dashboard() {
 
                         </div>
 
+                        {openComments === item.feedId && (
+
+                            <div className='comment-body'>
+
+                                <form
+                                    className="comment-form"
+                                    onSubmit={handleSubmit((data) => onSubmit(data, item.id))}
+                                >
+                                    <input {...register("comment")} placeholder="Write a comment..." />
+                                    <button type="submit">Submit</button>
+                                </form>
+
+                                <div className='comment-section'>
+                                    <Comment
+                                        post_Id={item.id}
+                                        parent_Id={null}
+                                    />
+                                </div>
+
+                            </div>
+
+                        )}
+
                     </div>
+
                 ))}
 
             </section>
-
 
             <aside className="right-sidebar">
 
@@ -232,26 +333,18 @@ export default function Dashboard() {
 
                 </div>
 
-
                 <div className="ad-card">
-
-                    <p className="ad-text">
-                        promoted...
-                    </p>
-
-                    <p className="ad-content">
-                        promotion
-                    </p>
-
+                    <p className="ad-text">promoted...</p>
+                    <p className="ad-content">promotion</p>
                 </div>
 
             </aside>
 
-
             {isPostModalOpen &&
-                <PostModal setIsPostModalOpen={setIsPostModalOpen} />
+                <div className='postModal'><PostModal setIsPostModalOpen={setIsPostModalOpen} /></div>
             }
 
         </main>
     )
 }
+

@@ -6,6 +6,7 @@ import { User } from './domain/entities/user.entity';
 import { config } from "dotenv";
 import { userModule } from './feature/user/user.module';
 import { authModule } from './feature/auth/auth.module';
+import { UsersOutbox } from './domain/entities/userOutBox.entity';
 
 
 config()
@@ -19,7 +20,7 @@ config()
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User],
+      entities: [User,UsersOutbox],
       synchronize: false,
     }),
     authModule,

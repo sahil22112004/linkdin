@@ -31,6 +31,11 @@ export class CommentMigration1773318674345 implements MigrationInterface {
                         isNullable: true
                     },
                     {
+                        name: "comment",
+                        type: "varchar",
+                        isNullable: false
+                    },
+                    {
                         name: "createdAt",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP"

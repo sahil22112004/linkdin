@@ -27,25 +27,10 @@ export class UserMigration1772446924619 implements MigrationInterface {
                         isUnique: true
                     },
                     {
-                        name: "fullname",
-                        type: "varchar",
-                        isNullable: true,
+                        name: "createdAt",
+                        type: "timestamp",
+                        default: "now()",
                     },
-                    {
-                        name: "image",
-                        type: "varchar",
-                        isNullable: true,
-                    },
-                    {
-                        name: "coverimage",
-                        type: "varchar",
-                        isNullable: true,
-                    },
-                    {
-                        name: "description",
-                        type: "varchar",
-                        isNullable: true,
-                    }
                 ]
             }),
             true

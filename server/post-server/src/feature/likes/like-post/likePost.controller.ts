@@ -1,7 +1,6 @@
 import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { LikesService } from './likePost.service';
 import { FirebaseAuthGuard } from '../../../infrastructure/firebase/firebase-authGuard';
-import { CheckId } from '../../../domain/dto/checkId.dto';
 
 
 @Controller('post')

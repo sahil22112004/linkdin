@@ -7,9 +7,10 @@ import { registerUserService } from './register-user/register.service';
 import { registerUserController } from './register-user/register.controller';
 import { GoogleLoginController } from './google-login/google-login.controller';
 import { GoogleLoginService } from './google-login/google-login.service';
+import { UsersOutbox } from '../../domain/entities/userOutBox.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User,UsersOutbox])],
   controllers: [loginUserController,registerUserController,GoogleLoginController],
   providers: [loginUserService,registerUserService,GoogleLoginService],
 })

@@ -15,8 +15,7 @@ export default function Profile() {
     const user = useSelector((state: RootState) => state.auth.currentUser)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-
-
+    console.log("user is", user)
 
 
     return (
@@ -25,19 +24,19 @@ export default function Profile() {
 
                 <div className="profile-card">
                     <div className="profile-banner">
-                        <span className='profile-background-icon'><CameraAltIcon/></span>
+                        <span className='profile-background-icon'><CameraAltIcon /></span>
                     </div>
                     <div className="profile-info">
                         <div>
-                        <div className="profile-photo">s
+                            <div className="profile-photo">s
 
+                            </div>
+                            <h1 className="profile-name">{user?.fullname ? user.fullname : "ENTER YOUR FULL NAME"}</h1>
+                            <p className="profile-headline">{user?.description ? user.description : ""}</p>
+                            <p className="profile-location"><span>{user?.state ? user.state + " " : ""} </span> <span>{user?.country ? user.country : ""}</span> </p>
                         </div>
-                        <h1 className="profile-name">{user?.fullname?user.fullname:"ENTER YOUR FULL NAME"}</h1>
-                        <p className="profile-headline">Software Engineer</p>
-                        <p className="profile-location">India</p>
-                        </div>
-                        <span className='edit-profile-icon' onClick={() => setIsEditModalOpen(true)}> <ModeEditOutlineOutlinedIcon/> </span>
-                        
+                        <span className='edit-profile-icon' onClick={() => setIsEditModalOpen(true)}> <ModeEditOutlineOutlinedIcon /> </span>
+
 
                     </div>
                     <div className='profile-card-options'>
@@ -48,13 +47,13 @@ export default function Profile() {
                 </div>
 
                 <div className="profile-section">
-                    
+
                     <div className='profile-section-header'>
-                    <h2 className="section-title">Experience</h2>
-                    <div className='edit-profile-section'>
-                    <span><IoMdAdd size={25} /></span>
-                    <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon/> </span>
-                    </div>
+                        <h2 className="section-title">Experience</h2>
+                        <div className='edit-profile-section'>
+                            <span><IoMdAdd size={25} /></span>
+                            <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon /> </span>
+                        </div>
                     </div>
                     <div className="experience-item">
                         <h3 className="item-title">Software Engineer</h3>
@@ -70,11 +69,11 @@ export default function Profile() {
 
                 <div className="profile-section">
                     <div className='profile-section-header'>
-                    <h2 className="section-title">Education</h2>
-                    <div className='edit-profile-section'>
-                    <span><IoMdAdd size={25} /></span>
-                    <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon/> </span>
-                    </div>
+                        <h2 className="section-title">Education</h2>
+                        <div className='edit-profile-section'>
+                            <span><IoMdAdd size={25} /></span>
+                            <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon /> </span>
+                        </div>
                     </div>
                     <div className="education-item">
                         <h3 className="item-title">chandigarh college of engineering and Technology</h3>
@@ -100,17 +99,17 @@ export default function Profile() {
                 <div className="sidebar-card">
                     <div className="sidebar-section">
                         <div>
-                        <h3 className="sidebar-title">Profile language</h3>
-                        <p className="sidebar-subtitle">English</p>
+                            <h3 className="sidebar-title">Profile language</h3>
+                            <p className="sidebar-subtitle">English</p>
                         </div>
-                        <span className='sidebar-section-icon'><ModeEditOutlineOutlinedIcon/></span>
+                        <span className='sidebar-section-icon'><ModeEditOutlineOutlinedIcon /></span>
                     </div>
                     <div className="sidebar-section">
                         <div>
-                        <h3 className="sidebar-title">Public profile & URL</h3>
-                        <p className="sidebar-subtitle">www.linkedin.com/in/sahil-kondal</p>
+                            <h3 className="sidebar-title">Public profile & URL</h3>
+                            <p className="sidebar-subtitle">www.linkedin.com/in/sahil-kondal</p>
                         </div>
-                        <span className='sidebar-section-icon'><ModeEditOutlineOutlinedIcon/></span>
+                        <span className='sidebar-section-icon'><ModeEditOutlineOutlinedIcon /></span>
                     </div>
                 </div>
             </div>

@@ -5,12 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { adminAuth } from './firebaseAdmin';
+import { Response } from 'express';
 
 @Injectable()
 export class FirebaseAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log("is token comming ",request.cookies?.token)
+    const res:Response = context.switchToHttp().getResponse();
     const token = request.cookies?.token;
 
     if (!token) {
@@ -22,7 +23,10 @@ export class FirebaseAuthGuard implements CanActivate {
       request.user = decodedToken;
       return true;
     } catch (error) {
+      res.cookie('token', null)
       throw new UnauthorizedException('Invalid or expired token');
+      
+
     }
   }
 }

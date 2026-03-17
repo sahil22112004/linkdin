@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { googleLogin, loginUser } from '../../redux/slices/authSlics';
+import { fetchUserProfile, googleLogin, loginUser } from '../../redux/slices/authSlics';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -27,17 +27,16 @@ export default function Login() {
     const { loading, isLoggedIn, currentUser, error } = useSelector((state: RootState) => state.auth)
 
     useEffect(() => {
-    if (currentUser && !error && isLoggedIn ) {
-      
-      router.push('/feed')
-      enqueueSnackbar("Login Success!", { variant: "success" })
-    }
+        if (currentUser && !error && isLoggedIn) {
+            router.push('/feed')
+            enqueueSnackbar("Login Success!", { variant: "success" })
+        }
 
-    if (error) {
-      enqueueSnackbar(error, { variant: "error" })
-    }
-  }, [currentUser, error])
-  
+        if (error) {
+            enqueueSnackbar(error, { variant: "error" })
+        }
+    }, [currentUser, error])
+
 
     const singupschema = z.object({
         email: z.string().min(1, 'Email is required').email("Invalid email format."),
@@ -59,7 +58,7 @@ export default function Login() {
                 console.log("token is", token)
                 const user = {
                     email: userCredential.user.email,
-                    token:token
+                    token: token
                 }
                 try {
                     await dispatch(loginUser(user))

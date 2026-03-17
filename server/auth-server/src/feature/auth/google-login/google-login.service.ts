@@ -11,7 +11,7 @@ export class GoogleLoginService {
         @InjectRepository(User) private userRepository: Repository<User>,
     ) { }
     async registerUser(dto: GoogleAuthDto) {
-        const { email, firebase_id, fullname, token } = dto
+        const { email, firebase_id, token } = dto
         const decodedToken = await adminAuth.verifyIdToken(token);
         if(decodedToken.email !== email){
             throw new HttpException('token do not match the given email', 404);
@@ -23,7 +23,6 @@ export class GoogleLoginService {
         }
         const User = this.userRepository.create({
             firebase_id,
-            fullname,
             email
         })
         const userInfo = await this.userRepository.save(User)

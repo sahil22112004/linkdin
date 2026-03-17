@@ -5,8 +5,9 @@ import * as z from 'zod';
 import CloseIcon from '@mui/icons-material/Close';
 import './editProfileModal.css';
 import { AppDispatch, RootState } from '../../redux/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { apiUpdateProfile } from '../../services/profileApi';
+import { fetchUserProfile } from '@/app/redux/slices/authSlics';
 
 
 const profileSchema = z.object({
@@ -28,6 +29,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
 
      const user = useSelector((state: RootState) => state.auth.currentUser)
 
+     const dispatch = useDispatch<AppDispatch>()
 
     const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
@@ -56,10 +58,13 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
     const onSubmit = async (data: ProfileFormValues) => {
         console.log("Form data submitted: ", data);
         const User ={
-            fullname:data.firstName+data.lastName,
-            description:data.headline
+            fullname:data.firstName+" "+data.lastName,
+            description:data.headline,
+            country:data.country,
+            state:data.city
         }
         await apiUpdateProfile(user?.firebase_id,User)
+        dispatch(fetchUserProfile())
         onClose();
     };
 

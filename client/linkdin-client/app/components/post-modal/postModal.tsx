@@ -12,6 +12,7 @@ import { apipost } from "@/app/services/postApi";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/redux/store";
 import { getPost } from "@/app/redux/slices/postSlice";
+import './postModal.css'
 
 const schema = z.object({
     text: z.string().min(1),

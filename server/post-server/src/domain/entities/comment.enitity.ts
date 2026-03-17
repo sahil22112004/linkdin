@@ -21,6 +21,9 @@ export class Comment {
     @OneToMany(() => Comment, (comment) => comment.comment_Id)
     replies: Comment[];
 
+    @Column()
+    comment: string;
+
     @CreateDateColumn({
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP(6)',

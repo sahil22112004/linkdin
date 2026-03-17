@@ -7,6 +7,9 @@ import { config } from "dotenv"
 import { Post } from './domain/entities/post.entity';
 import { LikesModule } from './feature/likes/likes.module';
 import { Like } from './domain/entities/like.entity';
+import {Comment} from './domain/entities/comment.enitity'
+import { CommentModule } from './feature/comment/comment.module';
+import { rePost } from './domain/entities/rePost.entity';
 
 config();
 
@@ -20,11 +23,13 @@ config();
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Post,Like],
+      entities: [Post,Like,Comment,rePost],
       synchronize: false,
     }),
     PostModule,
-    LikesModule],
+    LikesModule,
+    CommentModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

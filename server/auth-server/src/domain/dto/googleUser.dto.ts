@@ -13,8 +13,8 @@ export class GoogleAuthDto {
     @IsString({message:'token enter only string'})
     token:string
 
-    @IsString({message:'full name enter only string'})
-    @IsOptional()
-    fullname:string
+    // @IsString({message:'full name enter only string'})
+    // @IsOptional()
+    // fullname:string
 
 }

@@ -15,14 +15,6 @@ export class UpdateUserProfileService {
 
 
     async updateProfile(id:string,dto:updateUserDto){
-        const {fullname,description} = dto
-        const User = await this.userRepository.findOne({where:{firebase_id:id}})
-        if(!User){
-            throw new HttpException('User not Found', 404);
-        }
-        User.fullname= fullname;
-        User.description=description
-        await this.userRepository.save(User)
-        return {message:'user update successfully',user:User}
+
     }
 } 
