@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
+import { Follow } from './follow.entity';
+import {Connection} from './connection.entity'
 
 @Entity('users')
 export class User {
@@ -27,4 +29,15 @@ export class User {
     @Column()
     country: string;
 
+    @OneToMany(() => Follow, (follow) => follow.followByUser)
+    following: Follow[];
+
+    @OneToMany(() => Follow, (follow) => follow.followToUser)
+    followers: Follow[];
+
+    @OneToMany(() => Connection, (connection) => connection.senderId)
+    sentConnections: Connection[];
+
+    @OneToMany(() => Connection, (connection) => connection.receiverId)
+    receivedConnections: Connection[];
 }

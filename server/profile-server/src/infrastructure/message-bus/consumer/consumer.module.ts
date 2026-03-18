@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import { UserInbox } from "../../../domain/entities/userInbox.entity";
 import { User } from "../../../domain/entities/user.entity";
 import { CreateUserService } from "./createUser.service";
+import { Follow } from "../../../domain/entities/follow.entity";
 
 config()
 
@@ -20,7 +21,7 @@ config()
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, UserInbox],
+      entities: [User, UserInbox,Follow],
       synchronize: false,
     }),
   ],

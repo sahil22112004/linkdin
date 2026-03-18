@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './myNetwork.css';
 import PeopleIcon from '@mui/icons-material/People';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
@@ -11,8 +11,48 @@ import ArticleIcon from '@mui/icons-material/Article';
 import TagIcon from '@mui/icons-material/Tag';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/app/redux/store';
+import { ConnectionStatus, ConnectUserProfile, fetchAllUserProfile, FollowUserProfile } from '@/app/redux/slices/profileSlice';
+import { apiConnectionRequests } from '@/app/services/profileApi';
 
 export default function MyNetwork() {
+
+    const router = useRouter()
+    const dispatch = useDispatch<AppDispatch>()
+    const { loading, allUsers, error } = useSelector((state: RootState) => state.profile)
+    const [reqInfo,setReqInfo] = useState([])
+
+
+    const fetchConnectionReq = async()=>{
+        const res = await apiConnectionRequests()
+        setReqInfo(res)
+
+    }
+    useEffect(() => {
+        dispatch(fetchAllUserProfile())
+        fetchConnectionReq()
+    }, [])
+    console.log("allUsers are ", allUsers)
+
+    const handleFollow = async (id: string) => {
+        await dispatch(FollowUserProfile(id))
+    }
+    const handleConnection = async (id: string) => {
+        await dispatch(ConnectUserProfile(id))
+    }
+
+    const handleConnectionStatus = async (id: string,status:string) => {
+        const statusinfo = {
+            id:id,
+            status:status
+        }
+        await dispatch(ConnectionStatus(statusinfo))
+    }
+
+    const visibleProfiles = allUsers.filter((profile)=>profile.connectionStatus!=='ACCEPTED')
+
     const manageItems = [
         { icon: <PeopleIcon />, label: 'Connections', count: '1,234' },
         { icon: <ContactPhoneIcon />, label: 'Contacts', count: '567' },
@@ -21,15 +61,6 @@ export default function MyNetwork() {
         { icon: <FlagIcon />, label: 'Pages', count: '45' },
         { icon: <ArticleIcon />, label: 'Newsletters', count: '12' },
         { icon: <TagIcon />, label: 'Hashtags', count: '8' },
-    ];
-
-    const peopleYouMayKnow = [
-        { id: 1, name: 'John Doe', headline: 'Software Engineer at Google', avatar: 'J', mutual: 12 },
-        { id: 2, name: 'Jane Smith', headline: 'Product Manager at Meta', avatar: 'J', mutual: 5 },
-        { id: 3, name: 'Alice Johnson', headline: 'UX Designer at Amazon', avatar: 'A', mutual: 20 },
-        { id: 4, name: 'Bob Wilson', headline: 'Data Scientist at Netflix', avatar: 'B', mutual: 8 },
-        { id: 5, name: 'Charlie Brown', headline: 'Frontend Developer', avatar: 'C', mutual: 15 },
-        { id: 6, name: 'Diana Prince', headline: 'Marketing Executive', avatar: 'D', mutual: 3 },
     ];
 
     return (
@@ -51,7 +82,7 @@ export default function MyNetwork() {
                 </div>
 
                 <div className="sidebar-ad">
-                    <img src="https://via.placeholder.com/300x250" alt="Ad" />
+                    {/* <img src="https://via.placeholder.com/300x250" alt="Ad" /> */}
                 </div>
 
                 <div className="sidebar-footer">
@@ -66,43 +97,75 @@ export default function MyNetwork() {
                 <div className="invitations-card">
                     <div className="card-header">
                         <span>Invitations</span>
-                        <button className="manage-btn">See all 4</button>
                     </div>
-                    <div className="invitation-item">
+                    {reqInfo.map((req:any)=>(
+                        <div key={req.id} className="invitation-item">
                         <div className="invitation-left">
                             <div className="invitation-avatar">M</div>
                             <div className="invitation-info">
-                                <span className="invitation-name">Michael Scott</span>
-                                <span className="invitation-headline">Regional Manager at Dunder Mifflin</span>
-                                <span className="invitation-mutual">1 mutual connection</span>
+                                <span className="invitation-name">{req?.senderId?.fullname?req.senderId.fullname:""}</span>
+                                <span className="invitation-headline">{req?.senderId?.description?req.senderId.description:""}</span>
                             </div>
                         </div>
                         <div className="invitation-actions">
-                            <button className="ignore-btn">Ignore</button>
-                            <button className="accept-btn">Accept</button>
+                            <button className="ignore-btn" onClick={()=>handleConnectionStatus(req.id,'REJECTED')}>Ignore</button>
+                            <button className="accept-btn" onClick={()=>handleConnectionStatus(req.id,'ACCEPTED')} >Accept</button>
                         </div>
                     </div>
+                        
+                    ))}
+                    
                 </div>
 
                 <div className="people-grid-container">
                     <div className="card-header">
-                        <span>People you may know from ZenMonk Training</span>
+                        <span>People you may know </span>
                         <button className="see-all-btn">See all</button>
                     </div>
                     <div className="people-grid">
-                        {peopleYouMayKnow.map((person) => (
-                            <div key={person.id} className="person-card">
+                        {visibleProfiles.map((profile) => (
+                            <div key={profile.id} className="person-card">
                                 <div className="card-banner"></div>
                                 <div className="card-close"><CloseIcon fontSize="small" /></div>
                                 <div className="card-content">
-                                    <div className="person-avatar">{person.avatar}</div>
-                                    <h4 className="person-name">{person.name}</h4>
-                                    <p className="person-headline">{person.headline}</p>
-                                    <p className="person-mutual">{person.mutual} mutual connections</p>
-                                    <button className="connect-btn">
-                                        <PersonAddIcon fontSize="small" />
-                                        Connect
+                                    <div className="person-avatar">{profile.image}</div>
+                                    <h4 className="person-name">{profile.fullname}</h4>
+                                    <p className="person-headline">{profile.description}</p>
+                                    <p className="person-mutual">{profile.followerCount} followers</p>
+                                    <button
+                                        className="follow-btn"
+                                        onClick={() => handleFollow(profile.id)}
+                                    >
+                                        {profile.isFollowing ? "UnFollow" : "Follow"}
                                     </button>
+                                    {(
+                                        profile.connectionStatus == 'NOT_EXISTED' ||
+                                        profile.connectionStatus == 'REJECTED' ||
+                                        profile.connectionStatus == 'PENDING') ? 
+                                        <button 
+                                        className="connect-btn"
+                                        onClick={()=>handleConnection(profile.id)}
+                                        >
+
+                                        {(profile.connectionStatus == 'NOT_EXISTED' ||
+                                            profile.connectionStatus == 'REJECTED') ?
+                                            <>
+                                                <PersonAddIcon fontSize="small" />
+                                                Connect
+                                            </> :
+                                            <span>Pending</span>
+                                        }
+                                    </button> :
+                                    <>
+                                    <span>Sent you a Connection Req</span>
+                                        <div className='selection-btn-grp'>
+                                            <button className='select-connect-btn'>Ignore</button>
+                                            <button className='select-connect-btn'>Accept</button>
+
+                                        </div>
+                                    </>
+
+                                    }
                                 </div>
                             </div>
                         ))}
