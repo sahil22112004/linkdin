@@ -8,14 +8,26 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useState } from 'react';
 import EditProfileModal from '../../components/editprofileModal/editProfileModal';
+import ImageUploadModal from '../../components/imageUploadModal/imageUploadModal';
+import AddIcon from '@mui/icons-material/Add';
+import { ImageType } from '@/app/services/profileApi';
 
 
 
 export default function Profile() {
     const user = useSelector((state: RootState) => state.auth.currentUser)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [uploadType, setUploadType] = useState<ImageType>('PROFILE');
 
     console.log("user is", user)
+
+    const handleOpenImageModal = (type: ImageType) => {
+        setUploadType(type);
+        setModalTitle(type === 'PROFILE' ? 'Update Profile Photo' : 'Update Background Photo');
+        setIsImageModalOpen(true);
+    };
 
 
     return (
@@ -23,13 +35,26 @@ export default function Profile() {
             <div className="profile-main">
 
                 <div className="profile-card">
-                    <div className="profile-banner">
-                        <span className='profile-background-icon'><CameraAltIcon /></span>
+                    <div className="profile-banner" style={{
+                        backgroundImage: user?.coverimage ? `url(${user.coverimage})` : 'none',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}>
+                        <span className='profile-background-icon' onClick={() => handleOpenImageModal('COVERIMAGE')}><CameraAltIcon /></span>
                     </div>
                     <div className="profile-info">
                         <div>
-                            <div className="profile-photo">s
-
+                            <div className="profile-photo">
+                                {user?.image ? (
+                                    <img src={user.image} alt={user?.fullname || ''} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                ) : user?.fullname ? (
+                                    user.fullname[0]
+                                ) : (
+                                    <img src="/defaultimg.jpg" alt="Default Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                )}
+                                <span className='profile-photo-add-icon' onClick={() => handleOpenImageModal('PROFILE')}>
+                                    <AddIcon />
+                                </span>
                             </div>
                             <h1 className="profile-name">{user?.fullname ? user.fullname : "ENTER YOUR FULL NAME"}</h1>
                             <p className="profile-headline">{user?.description ? user.description : ""}</p>
@@ -115,6 +140,14 @@ export default function Profile() {
             </div>
             {isEditModalOpen && (
                 <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
+            )}
+            {isImageModalOpen && (
+                <ImageUploadModal
+                    isOpen={isImageModalOpen}
+                    onClose={() => setIsImageModalOpen(false)}
+                    title={modalTitle}
+                    type={uploadType}
+                />
             )}
         </div>
     );

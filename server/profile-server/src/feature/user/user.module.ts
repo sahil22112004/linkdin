@@ -17,6 +17,8 @@ import { FetchConnectionReqController } from './fetch-connection-request/fetchCo
 import { ChnageConnectionStatusService } from './change-connection-status/changeConnectionStatus.service';
 import { ConnectUserService } from './connection-user/connectUser.service';
 import { FetchConnectionRequestService } from './fetch-connection-request/fetchConnectionRequest.service';
+import { UpdateImageController } from './update-image/updateImage.controller';
+import { updateImageService } from './update-image/updateImage.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User,Follow,Connection])],
@@ -27,7 +29,8 @@ import { FetchConnectionRequestService } from './fetch-connection-request/fetchC
     FolllowController,
     ChangeConnectionStatusController,
     ConnectUserController,
-    FetchConnectionReqController
+    FetchConnectionReqController,
+    UpdateImageController
 
   ],
   providers: [
@@ -37,7 +40,8 @@ import { FetchConnectionRequestService } from './fetch-connection-request/fetchC
     FollowService,
     ChnageConnectionStatusService,
     ConnectUserService,
-    FetchConnectionRequestService
+    FetchConnectionRequestService,
+    updateImageService
   ],
 })
 export class userModule {}

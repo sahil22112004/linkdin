@@ -26,18 +26,6 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const { loading, isLoggedIn, currentUser, error } = useSelector((state: RootState) => state.auth)
 
-    useEffect(() => {
-        if (currentUser && !error && isLoggedIn) {
-            router.push('/feed')
-            enqueueSnackbar("Login Success!", { variant: "success" })
-        }
-
-        if (error) {
-            enqueueSnackbar(error, { variant: "error" })
-        }
-    }, [currentUser, error])
-
-
     const singupschema = z.object({
         email: z.string().min(1, 'Email is required').email("Invalid email format."),
         password: z.string().trim().min(4, 'Password must be at least 4 characters'),
@@ -62,6 +50,12 @@ export default function Login() {
                 }
                 try {
                     await dispatch(loginUser(user))
+                    if (!error ) {
+                        router.push('/feed')
+                        enqueueSnackbar("Login Success!", { variant: "success" })
+                    }else{
+                        enqueueSnackbar(error, { variant: "error" })
+                    }
 
                 } catch (error: any) {
                     console.log(error)
@@ -74,6 +68,7 @@ export default function Login() {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage)
+                enqueueSnackbar(errorMessage, { variant: "error" });
             });
 
     }
@@ -90,8 +85,12 @@ export default function Login() {
             }
             try {
                 await dispatch(googleLogin(User))
-                enqueueSnackbar("Registered Successfully!", { autoHideDuration: 3000 });
-                // router.push('/auth/login')
+                if (!error) {
+                    router.push('/feed')
+                    enqueueSnackbar("Login Success!", { variant: "success" })
+                }else {
+                    enqueueSnackbar(error, { variant: "error" })
+                }   
 
             } catch (error: any) {
                 enqueueSnackbar(error.message, { autoHideDuration: 3000 });

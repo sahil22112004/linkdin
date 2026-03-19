@@ -36,17 +36,17 @@ export default function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const { loading, isLoggedIn, currentUser, error } = useSelector((state: RootState) => state.auth)
 
-    useEffect(() => {
-        if (currentUser && !error && isLoggedIn) {
+    // useEffect(() => {
+    //     if (currentUser && !error && isLoggedIn) {
 
-            router.push('/feed')
-            enqueueSnackbar("Login Success!", { variant: "success" })
-        }
+    //         router.push('/feed')
+    //         enqueueSnackbar("Login Success!", { variant: "success" })
+    //     }
 
-        if (error) {
-            enqueueSnackbar(error, { variant: "error" })
-        }
-    }, [currentUser, error])
+    //     if (error) {
+    //         enqueueSnackbar(error, { variant: "error" })
+    //     }
+    // }, [currentUser, error])
 
 
     const {
@@ -109,8 +109,15 @@ export default function Signup() {
             console.log("user data is", User)
             try {
                 await dispatch(googleLogin(User))
-                enqueueSnackbar("Registered Successfully!", { autoHideDuration: 3000 });
-                // router.push('/auth/login')
+                if (currentUser && !error && isLoggedIn) {
+
+                    router.push('/feed')
+                    enqueueSnackbar("Login Success!", { variant: "success" })
+                }
+
+                if (error) {
+                    enqueueSnackbar(error, { variant: "error" })
+                }
 
             } catch (error: any) {
                 enqueueSnackbar(error.message, { autoHideDuration: 3000 });

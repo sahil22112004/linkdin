@@ -47,7 +47,7 @@ export default function Dashboard() {
 
     const dispatch = useDispatch<AppDispatch>()
     const { loading, post } = useSelector((state: RootState) => state.post)
-    const { currentUser} = useSelector((state: RootState) => state.auth)
+    const { currentUser } = useSelector((state: RootState) => state.auth)
 
 
     const { handleSubmit, register, reset } = useForm<CommentInterface>({
@@ -81,12 +81,24 @@ export default function Dashboard() {
             <aside className="left-sidebar">
 
                 <div className="profile-card">
-                    <div className="profile-background"></div>
-                    <div className="profile-avatar">S</div>
-                    <div onClick={()=>router.push('/profile')} >
-                        
-                    <h2 className="profile-name">{currentUser?.fullname?currentUser.fullname:""}</h2>
-                    <p className="profile-headline">{currentUser?.description?currentUser.description:""}</p>
+                    <div className="profile-background" style={{
+                        backgroundImage: currentUser?.coverimage ? `url(${currentUser.coverimage})` : 'none',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}></div>
+                    <div className="profile-avatar">
+                        {currentUser?.image ? (
+                            <img src={currentUser.image} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        ) : currentUser?.fullname ? (
+                            currentUser.fullname[0]
+                        ) : (
+                            <img src="/defaultimg.jpg" alt="Default" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        )}
+                    </div>
+                    <div onClick={() => router.push('/profile')} >
+
+                        <h2 className="profile-name">{currentUser?.fullname ? currentUser.fullname : ""}</h2>
+                        <p className="profile-headline">{currentUser?.description ? currentUser.description : ""}</p>
                     </div>
                 </div>
 
@@ -101,20 +113,20 @@ export default function Dashboard() {
                 </div>
                 <div className="profile-stats-1">
                     <div className="stat-1">
-                        <span className='stat-logo'><IoMdBookmark size={20}/></span>
+                        <span className='stat-logo'><IoMdBookmark size={20} /></span>
                         <span>Saved items</span>
-                        
+
                     </div>
                     <div className="stat-1">
-                        <span className='stat-logo'><MdGroups size={20}/></span>
+                        <span className='stat-logo'><MdGroups size={20} /></span>
                         <span>groups</span>
                     </div>
-                     <div className="stat-1">
-                        <span className='stat-logo'><RiNewsLine size={20}/></span>
+                    <div className="stat-1">
+                        <span className='stat-logo'><RiNewsLine size={20} /></span>
                         <span>Newsletters</span>
                     </div>
-                     <div className="stat-1">
-                        <span className='stat-logo'><IoIosCalendar size={20}/></span>
+                    <div className="stat-1">
+                        <span className='stat-logo'><IoIosCalendar size={20} /></span>
                         <span>Events</span>
                     </div>
                 </div>
@@ -126,7 +138,15 @@ export default function Dashboard() {
                 <div className="create-post-card">
 
                     <div className="create-post-input-area">
-                        <div className="current-user-avatar">S</div>
+                        <div className="current-user-avatar">
+                            {currentUser?.image ? (
+                                <img src={currentUser.image} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                            ) : currentUser?.fullname ? (
+                                currentUser.fullname[0]
+                            ) : (
+                                <img src="/defaultimg.jpg" alt="Default" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                            )}
+                        </div>
 
                         <button
                             className="start-post-btn"
@@ -181,7 +201,11 @@ export default function Dashboard() {
                         <div className="post-header">
 
                             <div className="post-avatar">
-                                {item?.author?.name?.charAt(0) || "U"}
+                                {item?.author?.image ? (
+                                    <img src={item.author.image} alt="Author" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                ) : (
+                                    item?.author?.name?.charAt(0) || "U"
+                                )}
                             </div>
 
                             <div className="post-info">

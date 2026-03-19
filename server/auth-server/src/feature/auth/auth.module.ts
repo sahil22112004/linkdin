@@ -8,10 +8,11 @@ import { registerUserController } from './register-user/register.controller';
 import { GoogleLoginController } from './google-login/google-login.controller';
 import { GoogleLoginService } from './google-login/google-login.service';
 import { UsersOutbox } from '../../domain/entities/userOutBox.entity';
+import { LogoutUserController } from './logout-user/logoutUser.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User,UsersOutbox])],
-  controllers: [loginUserController,registerUserController,GoogleLoginController],
+  controllers: [loginUserController,registerUserController,GoogleLoginController,LogoutUserController],
   providers: [loginUserService,registerUserService,GoogleLoginService],
 })
 export class authModule {}

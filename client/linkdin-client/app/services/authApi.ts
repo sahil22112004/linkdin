@@ -42,3 +42,15 @@ export const apiLogin = async (user: any) => {
     throw new Error(error.response?.data?.message || 'Register failed');
   }
 };
+
+export const apiLogout = async () => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/logout`, undefined, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("service error", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Register failed');
+  }
+};
