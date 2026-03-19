@@ -1,13 +1,9 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:4001'
+import { postApi } from './interceptor';
 
 export const apipost = async (post: any) => {
   console.log('working', post);
   try {
-    const response = await axios.post(`${BASE_URL}/post`, post, {
-      withCredentials: true
-    });
+    const response = await postApi.post(`/post`, post);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -20,9 +16,7 @@ export const apipost = async (post: any) => {
 export const apiGetPost = async () => {
   console.log('working');
   try {
-    const response = await axios.get(`${BASE_URL}/get-post`, {
-      withCredentials: true
-    });
+    const response = await postApi.get(`/get-post`);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -34,9 +28,7 @@ export const apiGetPost = async () => {
 export const apirepost = async (post_ID: string) => {
   console.log('working', post_ID);
   try {
-    const response = await axios.post(`${BASE_URL}/repost/${post_ID}`, undefined, {
-      withCredentials: true
-    });
+    const response = await postApi.post(`/repost/${post_ID}`);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -44,4 +36,5 @@ export const apirepost = async (post_ID: string) => {
     throw new Error(error.response?.data?.message || 'post failed');
   }
 };
+
 

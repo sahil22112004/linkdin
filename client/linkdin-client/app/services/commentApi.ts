@@ -1,13 +1,9 @@
-import axios from 'axios';
+import { postApi } from './interceptor';
 
-const BASE_URL = 'http://localhost:4001'
-
-export const apiCommentPost = async (post_id: string, comment:any) => {
-    console.log('working', post_id, "comment is ",comment);
+export const apiCommentPost = async (post_id: string, comment: any) => {
+    console.log('working', post_id, "comment is ", comment);
     try {
-        const response = await axios.post(`${BASE_URL}/comment/${post_id}`,comment, {
-            withCredentials: true
-        });
+        const response = await postApi.post(`/comment/${post_id}`, comment);
         console.log("service", response.data);
         return response.data;
     } catch (error: any) {
@@ -24,15 +20,14 @@ export const apiFetchComments = async (
 ) => {
 
     try {
-        const response = await axios.get(
-            `${BASE_URL}/comment/${post_id}`,
+        const response = await postApi.get(
+            `/comment/${post_id}`,
             {
                 params: {
                     parentId,
                     limit,
                     offset
-                },
-                withCredentials: true
+                }
             }
         );
 

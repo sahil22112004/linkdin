@@ -1,11 +1,9 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:4000'
+import { authApi } from './interceptor';
 
 export const apiRegister = async (user: any) => {
   console.log('working');
   try {
-    const response = await axios.post(`${BASE_URL}/auth/register`, user);
+    const response = await authApi.post(`/auth/register`, user);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -18,9 +16,7 @@ export const apiRegister = async (user: any) => {
 export const apiGoogleLogin = async (user: any) => {
   console.log('working');
   try {
-    const response = await axios.post(`${BASE_URL}/google-login`, user, {
-      withCredentials: true
-    });
+    const response = await authApi.post(`/google-login`, user);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -32,9 +28,7 @@ export const apiGoogleLogin = async (user: any) => {
 export const apiLogin = async (user: any) => {
   console.log('working');
   try {
-    const response = await axios.post(`${BASE_URL}/auth/login`, user, {
-      withCredentials: true
-    });
+    const response = await authApi.post(`/auth/login`, user);
     console.log("service", response.data);
     return response.data;
   } catch (error: any) {
@@ -45,12 +39,11 @@ export const apiLogin = async (user: any) => {
 
 export const apiLogout = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/logout`, undefined, {
-      withCredentials: true
-    });
+    const response = await authApi.post(`/auth/logout`);
     return response.data;
   } catch (error: any) {
     console.error("service error", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || 'Register failed');
   }
 };
+

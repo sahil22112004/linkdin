@@ -1,13 +1,9 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:4001'
+import { postApi } from './interceptor';
 
 export const apiLikePost = async (id: string) => {
     console.log('working', id);
     try {
-        const response = await axios.post(`${BASE_URL}/post/like/${id}`,undefined, {
-            withCredentials: true
-        });
+        const response = await postApi.post(`/post/like/${id}`);
         console.log("service", response.data);
         return response.data;
     } catch (error: any) {
@@ -15,3 +11,4 @@ export const apiLikePost = async (id: string) => {
         throw new Error(error.response?.data?.message || 'post failed');
     }
 };
+
