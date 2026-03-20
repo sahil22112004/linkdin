@@ -11,6 +11,9 @@ import EditProfileModal from '../../components/editprofileModal/editProfileModal
 import ImageUploadModal from '../../components/imageUploadModal/imageUploadModal';
 import AddIcon from '@mui/icons-material/Add';
 import { ImageType } from '@/app/services/profileApi';
+import ExperienceModal from '../../components/experienceModal/ExperienceModal';
+import EducationModal from '../../components/educationModal/EducationModal';
+
 
 
 
@@ -18,8 +21,11 @@ export default function Profile() {
     const user = useSelector((state: RootState) => state.auth.currentUser)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
+    const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [uploadType, setUploadType] = useState<ImageType>('PROFILE');
+
 
     console.log("user is", user)
 
@@ -58,7 +64,7 @@ export default function Profile() {
                             </div>
                             <h1 className="profile-name">{user?.fullname ? user.fullname : "ENTER YOUR FULL NAME"}</h1>
                             <p className="profile-headline">{user?.description ? user.description : ""}</p>
-                            <p className="profile-location"><span>{user?.state ? user.state + " " : ""} </span> <span>{user?.country ? user.country : ""}</span> </p>
+                            <p className="profile-location"><span>{user?.state ? user.state + ", " : ""} </span> <span>{user?.country ? user.country : ""}</span> </p>
                         </div>
                         <span className='edit-profile-icon' onClick={() => setIsEditModalOpen(true)}> <ModeEditOutlineOutlinedIcon /> </span>
 
@@ -76,9 +82,10 @@ export default function Profile() {
                     <div className='profile-section-header'>
                         <h2 className="section-title">Experience</h2>
                         <div className='edit-profile-section'>
-                            <span><IoMdAdd size={25} /></span>
+                            <span onClick={() => setIsExperienceModalOpen(true)}><IoMdAdd size={25} /></span>
                             <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon /> </span>
                         </div>
+
                     </div>
                     <div className="experience-item">
                         <h3 className="item-title">Software Engineer</h3>
@@ -96,9 +103,10 @@ export default function Profile() {
                     <div className='profile-section-header'>
                         <h2 className="section-title">Education</h2>
                         <div className='edit-profile-section'>
-                            <span><IoMdAdd size={25} /></span>
+                            <span onClick={() => setIsEducationModalOpen(true)}><IoMdAdd size={25} /></span>
                             <span className='edit-profile-section-icon'> <ModeEditOutlineOutlinedIcon /> </span>
                         </div>
+
                     </div>
                     <div className="education-item">
                         <h3 className="item-title">chandigarh college of engineering and Technology</h3>
@@ -149,7 +157,21 @@ export default function Profile() {
                     type={uploadType}
                 />
             )}
+            {isExperienceModalOpen && (
+                <ExperienceModal
+                    isOpen={isExperienceModalOpen}
+                    onClose={() => setIsExperienceModalOpen(false)}
+                />
+            )}
+            {isEducationModalOpen && (
+                <EducationModal
+                    isOpen={isEducationModalOpen}
+                    onClose={() => setIsEducationModalOpen(false)}
+                />
+            )}
         </div>
+
     );
 }
+
 

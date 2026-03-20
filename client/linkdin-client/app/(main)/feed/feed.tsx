@@ -10,8 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/redux/store'
 import { getPost } from '@/app/redux/slices/postSlice'
 import { apiLikePost } from '@/app/services/likeApi'
-import { VscThumbsup } from "react-icons/vsc"
-import { BsFillHandThumbsUpFill } from "react-icons/bs"
 import { FaRegCommentDots } from "react-icons/fa"
 import { BiRepost } from "react-icons/bi"
 import { IoIosSend } from "react-icons/io"
@@ -27,8 +25,8 @@ import { RiNewsLine } from "react-icons/ri";
 import { IoIosCalendar } from "react-icons/io";
 import { useRouter } from 'next/navigation'
 import { fetchUserProfile } from '@/app/redux/slices/authSlics'
-
-
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 
 
 
@@ -249,8 +247,8 @@ export default function Dashboard() {
                                     className="action-btn"
                                 >
                                     {item.isLiked
-                                        ? <BsFillHandThumbsUpFill size={15} />
-                                        : <VscThumbsup size={15} />
+                                        ? <ThumbUpOutlinedIcon sx={{ fontSize: 18 }}/>
+                                        : <ThumbUpIcon sx={{ fontSize: 18  }} />
                                     }
                                     <span>Like</span>
                                 </button>
@@ -263,7 +261,7 @@ export default function Dashboard() {
                                         )
                                     }
                                 >
-                                    <FaRegCommentDots />
+                                    <FaRegCommentDots  size={18}/>
                                     <span>Comment</span>
                                 </button>
 
@@ -271,7 +269,7 @@ export default function Dashboard() {
                                     className="action-btn"
                                     onClick={() => handleRePost(item.id)}
                                 >
-                                    <BiRepost size={20} />
+                                    <BiRepost size={18} />
                                     <span>Repost</span>
                                 </button>
 

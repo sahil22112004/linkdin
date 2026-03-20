@@ -14,6 +14,8 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlics";
 import postSlice from './slices/postSlice'
 import profileSlice from './slices/profileSlice'
+import { injectStore } from "@/app/services/interceptor";
+
 
 
 const persistConfig = {
@@ -40,7 +42,7 @@ export const store = configureStore({
       },
     }),
 });
-
+injectStore(store);
 export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;

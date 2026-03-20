@@ -96,12 +96,20 @@ export default function MyNetwork() {
             <main className="network-main">
                 <div className="invitations-card">
                     <div className="card-header">
-                        <span>Invitations</span>
+                        {(reqInfo.length > 0) ?<span>Invitations</span>:<span>No Invitations</span>}
                     </div>
                     {reqInfo.map((req:any)=>(
                         <div key={req.id} className="invitation-item">
                         <div className="invitation-left">
-                            <div className="invitation-avatar">M</div>
+                            <div className="invitation-avatar">
+                                    {req.senderId?.image ? (
+                                        <img src={req.senderId.image} alt={req.senderId.fullname || ""} className="person-avatar-img" />
+                                    ) : req.senderId?.fullname ? (
+                                        <span>{req.senderId.fullname.charAt(0).toUpperCase()}</span>
+                                    ) : (
+                                        <img src="/defaultimg.jpg" alt="Default Avatar" className="person-avatar-img" />
+                                    )}
+                                </div>
                             <div className="invitation-info">
                                 <span className="invitation-name">{req?.senderId?.fullname?req.senderId.fullname:""}</span>
                                 <span className="invitation-headline">{req?.senderId?.description?req.senderId.description:""}</span>
@@ -125,10 +133,21 @@ export default function MyNetwork() {
                     <div className="people-grid">
                         {visibleProfiles.map((profile) => (
                             <div key={profile.id} className="person-card">
-                                <div className="card-banner"></div>
+                                <div
+                                    className="card-banner"
+                                    style={profile.coverimage ? { backgroundImage: `url(${profile.coverimage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                                ></div>
                                 <div className="card-close"><CloseIcon fontSize="small" /></div>
                                 <div className="card-content">
-                                    <div className="person-avatar">{profile.image}</div>
+                                    <div className="person-avatar">
+                                        {profile.image ? (
+                                            <img src={profile.image} alt={profile.fullname || ""} className="person-avatar-img" />
+                                        ) : profile.fullname ? (
+                                            <span>{profile.fullname.charAt(0).toUpperCase()}</span>
+                                        ) : (
+                                            <img src="/defaultimg.jpg" alt="Default Avatar" className="person-avatar-img" />
+                                        )}
+                                    </div>
                                     <h4 className="person-name">{profile.fullname}</h4>
                                     <p className="person-headline">{profile.description}</p>
                                     <p className="person-mutual">{profile.followerCount} followers</p>
@@ -175,3 +194,7 @@ export default function MyNetwork() {
         </div>
     );
 }
+
+
+// in my network do that when
+
