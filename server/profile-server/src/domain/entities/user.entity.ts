@@ -1,6 +1,8 @@
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
 import { Follow } from './follow.entity';
 import {Connection} from './connection.entity'
+import { Education } from './education.entity';
+import { Experence } from './experence.entity';
 
 @Entity('users')
 export class User {
@@ -40,4 +42,10 @@ export class User {
 
     @OneToMany(() => Connection, (connection) => connection.receiverId)
     receivedConnections: Connection[];
+
+    @OneToMany(() => Education, (education) => education.userid)
+    education: Education[];
+
+    @OneToMany(() => Experence, (experence) => experence.userid)
+    experence: Experence[];
 }

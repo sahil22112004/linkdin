@@ -357,7 +357,8 @@ export default function Dashboard() {
 
                 <div className="ad-card">
                     <p className="ad-text">promoted...</p>
-                    <p className="ad-content">promotion</p>
+                    <img src="/linkedin_festive_hero.png" className="ad-image" alt="Promotion" />
+                    <p className="ad-content">Upgrade to see more features</p>
                 </div>
 
             </aside>

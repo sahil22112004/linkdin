@@ -4,7 +4,7 @@ import { ConversationResponseDto } from '../../domain/dto/conversation-response.
 import { Message } from '../../domain/enitites/message.entity';
 
 @Controller('chat')
-export class ChatController {
+export class MessageController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('conversation')

@@ -1,208 +1,299 @@
-
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './message.css';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import ImageIcon from '@mui/icons-material/Image';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import GifIcon from '@mui/icons-material/Gif';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import SendIcon from '@mui/icons-material/Send';
-
+import { io, Socket } from 'socket.io-client';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/app/redux/store';
+import { fetchAllUserProfile } from '@/app/redux/slices/profileSlice';
+import {
+  apiCreateConversation,
+  apiGetMessages,
+} from '../../services/messageApi';
+import { uploadToCloudinary } from '../../components/cloudnairy/cloudnairy';
+import { BiDotsHorizontalRounded, BiEdit, BiSearchAlt2 } from 'react-icons/bi';
+import { BsEmojiSmile, BsImage } from 'react-icons/bs';
+import { IoMdAttach } from 'react-icons/io';
 
-const MOCK_CONVERSATIONS = [
-    {
-        id: 1,
-        name: 'Sahil Kondal',
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
-        lastMessage: 'Sure, I will send the files by evening.',
-        time: 'Mar 15',
-        status: 'Online',
-        messages: [
-            { id: 1, sender: 'Sahil Kondal', text: 'Hello! How are you?', time: '2:30 PM', isMe: false, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80' },
-            { id: 2, sender: 'Me', text: 'I am good, thanks! Did you check the project requirements?', time: '2:35 PM', isMe: true, avatar: null },
-            { id: 3, sender: 'Sahil Kondal', text: 'Yes, looking good. Sure, I will send the files by evening.', time: '2:40 PM', isMe: false, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80' },
-        ]
-    },
-    {
-        id: 2,
-        name: 'James Wilson',
-        avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
-        lastMessage: 'The interview is scheduled for tomorrow.',
-        time: 'Mar 14',
-        status: 'Offline',
-        messages: [
-            { id: 1, sender: 'James Wilson', text: 'Hi, are you available for a quick call?', time: '10:00 AM', isMe: false, avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80' },
-            { id: 2, sender: 'Me', text: 'Hi James, yes, let me know the time.', time: '10:15 AM', isMe: true, avatar: null },
-            { id: 3, sender: 'James Wilson', text: 'The interview is scheduled for tomorrow.', time: '11:00 AM', isMe: false, avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80' },
-        ]
-    },
-    {
-        id: 3,
-        name: 'Emily Davis',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
-        lastMessage: 'Great work on the latest update!',
-        time: 'Mar 12',
-        status: 'Away',
-        messages: []
-    }
-];
+const ProfileAvatar = ({ user, className = "avatar" }: { user: any, className?: string }) => {
+  if (user?.image) {
+    return <img src={user.image} className={className} alt={user.fullname || 'User'} />;
+  }
+  if (user?.fullname) {
+    return (
+      <div className={`${className} avatar-placeholder`}>
+        {user.fullname.charAt(0).toUpperCase()}
+      </div>
+    );
+  }
+  return <img src="/defaultimg.jpg" className={className} alt="Default User" />;
+};
 
 export default function MessagingPage() {
-    const [activeConvId, setActiveConvId] = useState(1);
-    const [messageInput, setMessageInput] = useState('');
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { allUsers } = useSelector((state: RootState) => state.profile);
+  const { currentUser } = useSelector((state: RootState) => state.auth);
 
-    const activeConv = MOCK_CONVERSATIONS.find(c => c.id === activeConvId) || MOCK_CONVERSATIONS[0];
+  const currentUserId = currentUser?.id;
 
-    const handleSendMessage = () => {
-        if (!messageInput.trim()) return;
-        console.log('Sending message:', messageInput);
-        setMessageInput('');
-        setShowEmojiPicker(false);
+  const socketRef = useRef<Socket | null>(null);
+  const conversationRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  const [activeUser, setActiveUser] = useState<any>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [messageInput, setMessageInput] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    dispatch(fetchAllUserProfile());
+  }, []);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    if (!currentUserId) return;
+
+    socketRef.current = io('http://localhost:4004', {
+      query: { userId: currentUserId },
+    });
+
+    socketRef.current.on('newMessage', (msg) => {
+      if (
+        msg.conversation?.id !== conversationRef.current &&
+        msg.conversationId !== conversationRef.current
+      ) return;
+
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socketRef.current?.disconnect();
     };
+  }, [currentUserId]);
 
-    const onEmojiClick = (emojiData: EmojiClickData) => {
-        setMessageInput(prev => prev + emojiData.emoji);
-    };
+  useEffect(() => {
+    conversationRef.current = conversationId;
+  }, [conversationId]);
 
-    return (
-        <div className="messaging-container">
+  const handleSelectUser = async (user: any) => {
+    if (!currentUserId) return;
 
-            <div className="messages-sidebar">
-                <div className="sidebar-header">
-                    <h2>Messaging</h2>
-                    <div className="sidebar-icons">
-                        <MoreHorizIcon className="icon" />
-                        <EditNoteIcon className="icon" />
-                    </div>
-                </div>
-                <div className="sidebar-search">
-                    <SearchIcon className="search-icon" />
-                    <input type="text" placeholder="Search messages" />
-                </div>
-                <div className="conversation-list">
-                    {MOCK_CONVERSATIONS.map(conv => (
-                        <div
-                            key={conv.id}
-                            className={`conversation-item ${activeConvId === conv.id ? 'active' : ''}`}
-                            onClick={() => setActiveConvId(conv.id)}
-                        >
-                            <img src={conv.avatar} alt={conv.name} className="avatar" />
-                            <div className="conversation-info">
-                                <div className="conversation-info-header">
-                                    <span className="conversation-name">{conv.name}</span>
-                                    <span className="conversation-time">{conv.time}</span>
-                                </div>
-                                <div className="last-message">{conv.lastMessage}</div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+    setActiveUser(user);
+    setMessages([]);
 
-            <div className="chat-window">
-                <div className="chat-header">
-                    <div className="chat-header-info">
-                        <h3>{activeConv.name}</h3>
-                        <p>{activeConv.status}</p>
-                    </div>
-                    <div className="chat-actions">
-                        <MoreHorizIcon className="icon" />
-                    </div>
-                </div>
+    const convId = await apiCreateConversation(currentUserId, user.id);
 
-                <div className="message-thread">
-                    {activeConv.messages.length > 0 ? (
-                        activeConv.messages.map(msg => (
-                            <div key={msg.id} className="message">
-                                {msg.avatar ? (
-                                    <img src={msg.avatar} alt={msg.sender} className="message-avatar" />
-                                ) : (
-                                    <div className="message-avatar" style={{ backgroundColor: '#0a66c2', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: '600' }}>
-                                        M
-                                    </div>
-                                )}
-                                <div className="message-content">
-                                    <div className="message-meta">
-                                        <span className="message-sender">{msg.sender}</span>
-                                        <span className="message-time">{msg.time}</span>
-                                    </div>
-                                    <div className="message-text">{msg.text}</div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="empty-thread" style={{ textAlign: 'center', marginTop: '100px', color: 'rgba(0,0,0,0.6)' }}>
-                            <p>No messages yet. Say hello!</p>
-                        </div>
-                    )}
-                </div>
+    setConversationId(convId);
+    conversationRef.current = convId;
 
-                <div className="chat-input-container">
-                    {showEmojiPicker && (
-                        <div style={{ position: 'absolute', bottom: '180px', right: '350px', zIndex: 1000 }}>
-                            <EmojiPicker onEmojiClick={onEmojiClick} />
-                        </div>
-                    )}
-                    <div className="input-wrapper">
-                        <textarea
-                            placeholder="Write a message..."
-                            value={messageInput}
-                            onChange={(e) => setMessageInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSendMessage();
-                                }
-                            }}
-                        />
-                        <div className="input-controls">
-                            <div className="input-tools">
-                                <ImageIcon className="icon" />
-                                <AttachFileIcon className="icon" />
-                                <GifIcon className="icon" />
-                                <SentimentSatisfiedAltIcon
-                                    className="icon"
-                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                />
-                            </div>
-                            <button
-                                className="send-btn"
-                                onClick={handleSendMessage}
-                                disabled={!messageInput.trim()}
-                            >
-                                Send
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    socketRef.current?.emit('joinConversation', {
+      conversationId: convId,
+    });
 
+    const msgs = await apiGetMessages(convId);
+    setMessages(msgs.reverse());
+  };
 
-            <div className="messaging-right-sidebar">
-                <div className="ad-card">
-                    <p>Ad · ...</p>
-                    <h4 style={{ fontSize: '14px', marginBottom: '8px' }}>Sahil, unlock your full potential with LinkedIn Premium.</h4>
-                    <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Ad" className="ad-image" />
-                    <button style={{
-                        marginTop: '12px',
-                        padding: '6px 16px',
-                        borderRadius: '16px',
-                        border: '1px solid #0a66c2',
-                        background: 'transparent',
-                        color: '#0a66c2',
-                        fontWeight: '600',
-                        cursor: 'pointer'
-                    }}>
-                        Try for free
-                    </button>
-                </div>
-            </div>
+  const handleSendMessage = () => {
+    if (!messageInput.trim() || !conversationId || !currentUserId) return;
+
+    socketRef.current?.emit('sendMessage', {
+      conversationId,
+      senderId: currentUserId,
+      content: messageInput,
+      type: 'TEXT',
+    });
+
+    setMessageInput('');
+  };
+
+  const handleFileChange = async (e: any) => {
+    const file = e.target.files[0];
+    if (!file || !conversationId || !currentUserId) return;
+
+    const url = await uploadToCloudinary(file);
+    const type = file.type.startsWith('video') ? 'VIDEO' : 'IMAGE';
+
+    socketRef.current?.emit('sendMessage', {
+      conversationId,
+      senderId: currentUserId,
+      content: url,
+      type,
+    });
+  };
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setMessageInput((prev) => prev + emojiData.emoji);
+  };
+
+  const filteredUsers = allUsers.filter(user =>
+    user.id !== currentUserId &&
+    user.fullname?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="messaging-container">
+      <div className="messages-sidebar">
+        <div className="sidebar-header">
+          <h2>Messaging</h2>
+          <div className="sidebar-icons">
+            <BiDotsHorizontalRounded className="icon" title="More" />
+            <BiEdit className="icon" title="New Message" />
+          </div>
         </div>
-    );
+
+        <div className="sidebar-search">
+          <BiSearchAlt2 className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search messages"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="conversation-list">
+          {filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className={`conversation-item ${activeUser?.id === user.id ? 'active' : ''}`}
+              onClick={() => handleSelectUser(user)}
+            >
+              <ProfileAvatar user={user} className="avatar" />
+              <div className="conversation-info">
+                <div className="conversation-info-header">
+                  <span className="conversation-name">{user.fullname}</span>
+                  <span className="conversation-time"></span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="chat-window">
+        {activeUser ? (
+          <>
+            <div className="chat-header">
+              <div className="chat-header-info">
+                <h3>{activeUser.fullname}</h3>
+              </div>
+              <div className="chat-actions">    
+                <BiDotsHorizontalRounded className="icon" />
+              </div>
+            </div>
+
+            <div className="message-thread">
+              {messages.map((msg) => {
+                const isMe = msg.senderId === currentUserId;
+                const sender = isMe ? currentUser : activeUser;
+
+                return (
+                  <div
+                    key={msg.id}
+                    className={`message-container ${isMe ? 'me' : 'other'}`}
+                  >
+                    {!isMe && <ProfileAvatar user={activeUser} className="message-avatar" />}
+                    <div className="message-content">
+                      <div className="message-bubble">
+                        {msg.type === 'TEXT' && (
+                          <div className="message-text">{msg.content}</div>
+                        )}
+                        {msg.type === 'IMAGE' && (
+                          <img src={msg.content} className="chat-image" alt="Shared image" />
+                        )}
+                        {msg.type === 'VIDEO' && (
+                          <video controls className="chat-video">
+                            <source src={msg.content} />
+                          </video>
+                        )}
+                      </div>
+                      <span className="message-time">
+                        {/* {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} */}
+                      </span>
+                    </div>
+                    {isMe && <ProfileAvatar user={currentUser} className="message-avatar" />}
+                  </div>
+                );
+              })}
+              <div ref={messageEndRef} />
+            </div>
+
+            <div className="chat-input-container">
+              <div className="input-wrapper">
+                <textarea
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  placeholder="Write a message..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                />
+
+                {showEmojiPicker && (
+                  <div className="emoji-picker-popup">
+                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                  </div>
+                )}
+
+                <div className="input-controls">
+                  <div className="input-tools">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
+                    <BsImage
+                      className="icon"
+                      title="Add image"
+                      onClick={() => fileInputRef.current?.click()}
+                    />
+                    <IoMdAttach className="icon" title="Attach file" />
+                    <BsEmojiSmile
+                      className="icon"
+                      title="Emojis"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    />
+                  </div>
+                  <button
+                    className="send-btn"
+                    onClick={handleSendMessage}
+                    disabled={!messageInput.trim()}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="chat-placeholder">
+            <div className="placeholder-content">
+              <BiEdit className="placeholder-icon" />
+              <p>Select a user and start a conversation</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="messaging-right-sidebar">
+        <div className="ad-card">
+          <p>Ad</p>
+          <img src="/linkedin_festive_hero.png" className="ad-image" alt="Promotion" />
+          <p>Upgrade to see more features</p>
+        </div>
+      </div>
+    </div>
+  );
 }

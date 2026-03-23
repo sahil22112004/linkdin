@@ -88,4 +88,25 @@ export const apiConnectionStatus = async (id: string, status: string) => {
 };
 
 
+export const apiAddEducation = async (educationData : any) => {
+  try {
+    const response = await profileApi.post(`/profile/education`,educationData);
+    return response.data;
+  } catch (error: any) {
+    console.error("service error", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'user fetch failed');
+  }
+};
+
+export const apiAddExperence = async (expereneData : any) => {
+  try {
+    const response = await profileApi.post(`/profile/experence`,expereneData);
+    return response.data;
+  } catch (error: any) {
+    console.error("service error", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'user fetch failed');
+  }
+};
+
+
 

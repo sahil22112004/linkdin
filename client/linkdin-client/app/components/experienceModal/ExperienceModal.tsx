@@ -6,6 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import CloseIcon from '@mui/icons-material/Close';
 import './experienceModal.css';
+import { apiAddExperence } from '@/app/services/profileApi';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/redux/store';
+import { fetchUserProfile } from '@/app/redux/slices/authSlics';
 
 const experienceSchema = z.object({
     title: z.string().min(1, 'Title is required'),
@@ -38,6 +42,9 @@ export default function ExperienceModal({ isOpen, onClose }: ExperienceModalProp
         resolver: zodResolver(experienceSchema),
     });
 
+
+    const dispatch = useDispatch<AppDispatch>()
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -51,8 +58,22 @@ export default function ExperienceModal({ isOpen, onClose }: ExperienceModalProp
 
     if (!isOpen) return null;
 
-    const onSubmit = (data: ExperienceFormValues) => {
-        console.log("Experience data submitted: ", data);
+    const onSubmit = async (data: ExperienceFormValues) => {
+        
+
+        const expData = {
+            title : data.title,
+            employmentType : data.employmentType,
+            company : data.company,
+            location : data.location,
+            startTime: data.startMonth + " " + data.startYear,
+            endTime : data.endMonth + " " + data.endYear
+        }
+        console.log("Experience data submitted: ", expData);
+
+        await apiAddExperence(expData)
+        dispatch(fetchUserProfile())
+
         onClose();
     };
 

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './message.service';
+import { MessageType } from '../../domain/enitites/message.entity';
 
 @WebSocketGateway({
   cors: {
@@ -25,12 +26,25 @@ export class ChatGateway
 
   handleConnection(socket: Socket) {
     const userId = socket.handshake.query.userId as string;
+
     if (userId) {
       socket.join(userId);
+      console.log(`User connected: ${userId}`);
     }
   }
 
-  handleDisconnect(socket: Socket) {}
+  handleDisconnect(socket: Socket) {
+    console.log(`User disconnected: ${socket.id}`);
+  }
+
+  @SubscribeMessage('joinConversation')
+  handleJoinConversation(
+    @MessageBody() data: { conversationId: string },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    socket.join(data.conversationId);
+    console.log(`Joined room: ${data.conversationId}`);
+  }
 
   @SubscribeMessage('sendMessage')
   async handleMessage(
@@ -38,18 +52,21 @@ export class ChatGateway
     data: {
       conversationId: string;
       senderId: string;
-      receiverId: string;
       content: string;
+      type: 'TEXT' | 'IMAGE' | 'VIDEO';
     },
-    @ConnectedSocket() socket: Socket,
   ) {
+    const messageType: MessageType =
+      MessageType[data.type as keyof typeof MessageType];
+
     const message = await this.chatService.sendMessage(
       data.conversationId,
       data.senderId,
       data.content,
+      messageType,
     );
 
-    this.server.to(data.receiverId).emit('newMessage', message);
+    this.server.to(data.conversationId).emit('newMessage', message);
 
     return message;
   }
@@ -57,8 +74,20 @@ export class ChatGateway
   @SubscribeMessage('typing')
   handleTyping(
     @MessageBody()
-    data: { receiverId: string },
+    data: { conversationId: string; userId: string },
   ) {
-    this.server.to(data.receiverId).emit('typing');
+    this.server
+      .to(data.conversationId)
+      .emit('typing', { userId: data.userId });
+  }
+
+  @SubscribeMessage('stopTyping')
+  handleStopTyping(
+    @MessageBody()
+    data: { conversationId: string; userId: string },
+  ) {
+    this.server
+      .to(data.conversationId)
+      .emit('stopTyping', { userId: data.userId });
   }
 }

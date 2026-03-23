@@ -42,4 +42,5 @@ export const createAPI = (baseURL: string) => {
 export const authApi = createAPI("http://localhost:4000");
 export const postApi = createAPI("http://localhost:4001");
 export const profileApi = createAPI("http://localhost:4003");
+export const messageApi = createAPI("http://localhost:4004");
 export const privateApi = createAPI(process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000");

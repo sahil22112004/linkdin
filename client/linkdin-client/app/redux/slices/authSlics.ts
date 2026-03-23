@@ -3,8 +3,17 @@ import { apiGoogleLogin, apiLogin, apiLogout, apiRegister } from '../../services
 import { current } from "@reduxjs/toolkit";
 import { apiFetchUserProfile } from '@/app/services/profileApi';
 
+export interface experence {
+  title : string,
+  employmentType: string,
+  location: string,
+  company: string,
+  startTime: string,
+  endTime: string,
+}
+
 export interface User {
-  id?: number | string;
+  id?: string;
   firebase_id: string;
   email: string;
   fullname?: string | null;
@@ -12,7 +21,10 @@ export interface User {
   coverimage: string | null;
   description: string | null;
   state: string | null;
-  country: string | null
+  country: string | null;
+  connectionCount: number | null;
+  // education
+  experence: experence[] | null;
 }
 
 interface AuthState {

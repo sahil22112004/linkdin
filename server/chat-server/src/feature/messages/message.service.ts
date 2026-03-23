@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Conversation } from '../../domain/enitites/conversation.entity';
 import { ConversationParticipant } from '../../domain/enitites/conversationParticipant.entity';
-import { Message } from '../../domain/enitites/message.entity';
+import { Message, MessageType } from '../../domain/enitites/message.entity';
 import { MessageRead } from '../../domain/enitites/messageRead.entity';
 import { ConversationResponseDto } from '../../domain/dto/conversation-response.dto';
 
@@ -93,7 +93,11 @@ export class ChatService {
     return result;
   }
 
-  async getMessages(conversationId: string, page = 1, limit = 20): Promise<Message[]> {
+  async getMessages(
+    conversationId: string,
+    page = 1,
+    limit = 20
+  ): Promise<Message[]> {
     return this.messageRepo.find({
       where: { conversation: { id: conversationId } },
       order: { createdAt: 'DESC' },
@@ -106,15 +110,20 @@ export class ChatService {
     conversationId: string,
     senderId: string,
     content: string,
+    type: MessageType = MessageType.TEXT
   ): Promise<Message> {
     return this.messageRepo.save({
       conversation: { id: conversationId },
       senderId,
       content,
+      type,
     });
   }
 
-  async markAsRead(conversationId: string, userId: string): Promise<boolean> {
+  async markAsRead(
+    conversationId: string,
+    userId: string
+  ): Promise<boolean> {
     const messages = await this.messageRepo.find({
       where: { conversation: { id: conversationId } },
     });

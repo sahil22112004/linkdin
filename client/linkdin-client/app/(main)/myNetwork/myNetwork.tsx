@@ -177,11 +177,10 @@ export default function MyNetwork() {
                                     </button> :
                                     <>
                                     <span>Sent you a Connection Req</span>
-                                        <div className='selection-btn-grp'>
+                                        {/* <div className='selection-btn-grp'>
                                             <button className='select-connect-btn'>Ignore</button>
                                             <button className='select-connect-btn'>Accept</button>
-
-                                        </div>
+                                        </div> */}
                                     </>
 
                                     }

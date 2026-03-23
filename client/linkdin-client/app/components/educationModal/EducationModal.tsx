@@ -52,7 +52,15 @@ export default function EducationModal({ isOpen, onClose }: EducationModalProps)
     if (!isOpen) return null;
 
     const onSubmit = (data: EducationFormValues) => {
-        console.log("Education data submitted: ", data);
+        const educationData = {
+            school : data.school,
+            degree : data.degree,
+            fieldOfStudy : data.grade,
+            grade : data.grade,
+            startTime: data.startMonth + " " + data.startYear,
+            endTime : data.endMonth + " " + data.endYear
+        }
+        console.log("Education data submitted: ", educationData);
         onClose();
     };
 
