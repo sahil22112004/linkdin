@@ -6,6 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import CloseIcon from '@mui/icons-material/Close';
 import './educationModal.css';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/redux/store';
+import { apiAddEducation } from '@/app/services/profileApi';
+import { fetchUserProfile } from '@/app/redux/slices/authSlics';
 
 const educationSchema = z.object({
     school: z.string().min(1, 'School is required'),
@@ -37,6 +41,9 @@ export default function EducationModal({ isOpen, onClose }: EducationModalProps)
     const { register, handleSubmit, formState: { errors } } = useForm<EducationFormValues>({
         resolver: zodResolver(educationSchema),
     });
+        
+    const dispatch = useDispatch<AppDispatch>()
+
 
     useEffect(() => {
         if (isOpen) {
@@ -51,7 +58,7 @@ export default function EducationModal({ isOpen, onClose }: EducationModalProps)
 
     if (!isOpen) return null;
 
-    const onSubmit = (data: EducationFormValues) => {
+    const onSubmit = async (data: EducationFormValues) => {
         const educationData = {
             school : data.school,
             degree : data.degree,
@@ -61,6 +68,8 @@ export default function EducationModal({ isOpen, onClose }: EducationModalProps)
             endTime : data.endMonth + " " + data.endYear
         }
         console.log("Education data submitted: ", educationData);
+        await apiAddEducation(educationData)
+        dispatch(fetchUserProfile())
         onClose();
     };
 

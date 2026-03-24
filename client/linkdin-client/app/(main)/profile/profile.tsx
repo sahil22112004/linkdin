@@ -138,7 +138,7 @@ export default function Profile() {
                         </div>
                     </div>
 
-                    {/* {user?.education?.length ? (
+                    {user?.education?.length ? (
                         user.education.map((edu: any, index: number) => (
                             <div className="education-item" key={edu.id || index}>
                                 <h3 className="item-title">{edu.school}</h3>
@@ -149,10 +149,10 @@ export default function Profile() {
                                     {edu.startTime} - {edu.endTime}
                                 </p>
                             </div>
-                        )) */}
-                    {/* // ) : ( */}
+                        ))
+                    ) : ( 
                         <p>add education</p>
-                    {/* // )} */}
+                    )}
                 </div>
 
                 {/* SKILLS */}

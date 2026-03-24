@@ -374,6 +374,7 @@
     padding: 16px;
     background-color: #f3f2ef;
     flex-shrink: 0;
+    display: flex;
 }
 
 @media (max-width: 1000px) {

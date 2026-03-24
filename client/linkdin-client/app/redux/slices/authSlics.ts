@@ -3,7 +3,19 @@ import { apiGoogleLogin, apiLogin, apiLogout, apiRegister } from '../../services
 import { current } from "@reduxjs/toolkit";
 import { apiFetchUserProfile } from '@/app/services/profileApi';
 
+
+export interface education {
+  id:string
+  school : string,
+  degree: string,
+  fieldOfStudy: string,
+  grade: string,
+  startTime: string,
+  endTime: string,
+}
+
 export interface experence {
+  id:string
   title : string,
   employmentType: string,
   location: string,
@@ -23,7 +35,7 @@ export interface User {
   state: string | null;
   country: string | null;
   connectionCount: number | null;
-  // education
+  education : education[]| null
   experence: experence[] | null;
 }
 

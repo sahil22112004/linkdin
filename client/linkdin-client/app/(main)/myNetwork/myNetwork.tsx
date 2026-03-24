@@ -23,6 +23,8 @@ export default function MyNetwork() {
     const dispatch = useDispatch<AppDispatch>()
     const { loading, allUsers, error } = useSelector((state: RootState) => state.profile)
     const [reqInfo,setReqInfo] = useState([])
+    const { currentUser } = useSelector((state: RootState) => state.auth)
+
 
 
     const fetchConnectionReq = async()=>{
@@ -54,8 +56,7 @@ export default function MyNetwork() {
     const visibleProfiles = allUsers.filter((profile)=>profile.connectionStatus!=='ACCEPTED')
 
     const manageItems = [
-        { icon: <PeopleIcon />, label: 'Connections', count: '1,234' },
-        { icon: <ContactPhoneIcon />, label: 'Contacts', count: '567' },
+        { icon: <PeopleIcon />, label: 'Connections', count: currentUser?.connectionCount },
         { icon: <PersonAddIcon />, label: 'Following & followers', count: null },
         { icon: <EventIcon />, label: 'Events', count: '2' },
         { icon: <FlagIcon />, label: 'Pages', count: '45' },
@@ -82,7 +83,6 @@ export default function MyNetwork() {
                 </div>
 
                 <div className="sidebar-ad">
-                    {/* <img src="https://via.placeholder.com/300x250" alt="Ad" /> */}
                 </div>
 
                 <div className="sidebar-footer">
