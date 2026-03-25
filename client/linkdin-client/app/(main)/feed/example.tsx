@@ -8,7 +8,7 @@ import { MdArrowDropDown, MdOutlineArticle } from "react-icons/md"
 import PostModal from '@/app/components/post-modal/postModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/redux/store'
-import { getPost, likePost, setSortBy } from '@/app/redux/slices/postSlice'
+import { getPost, setSortBy } from '@/app/redux/slices/postSlice'
 import { apiLikePost } from '@/app/services/likeApi'
 import { FaRegCommentDots } from "react-icons/fa"
 import { BiRepost } from "react-icons/bi"
@@ -75,7 +75,8 @@ export default function Dashboard() {
     }, [dispatch, limit, sortBy])
 
     const handleLikePost = async (id: string) => {
-        dispatch(likePost(id))
+        await apiLikePost(id)
+        dispatch(getPost({ page: 1, limit, sortBy }))
     }
 
     const onSubmit = async (data: CommentInterface, post_id: string) => {
@@ -281,8 +282,8 @@ export default function Dashboard() {
                                     className="action-btn"
                                 >
                                     {item.isLiked
-                                        ?<ThumbUpIcon sx={{ fontSize: 18 }} />
-                                        :<ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />
+                                        ? <ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />
+                                        : <ThumbUpIcon sx={{ fontSize: 18 }} />
                                     }
                                     <span>Like</span>
                                 </button>
@@ -391,7 +392,7 @@ export default function Dashboard() {
 
                 <div className="ad-card">
                     <p className="ad-text">promoted...</p>
-                    <img src="/linkedin_festive_hero.png" className="ad-image" alt="Promotion" height={280} width={250} />
+                    <img src="/linkedin_festive_hero.png" className="ad-image" alt="Promotion" height={280} width={20} />
                     <p className="ad-content">Upgrade to see more features</p>
                 </div>
 

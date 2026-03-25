@@ -56,7 +56,8 @@ export default function PostModal({ setIsPostModalOpen }: any) {
         }
 
         const res = await apipost(postData)
-        dispatch(getPost('fetch post'))
+        dispatch(getPost({ page: 1, limit: 5, sortBy: 'recent' }))
+
         reset()
         setIsPostModalOpen(false)
 

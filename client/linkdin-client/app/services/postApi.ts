@@ -13,15 +13,25 @@ export const apipost = async (post: any) => {
 };
 
 
-export const apiGetPost = async () => {
-  console.log('working');
+export const apiGetPost = async (
+  page: number = 1,
+  limit: number = 10,
+  sortBy: 'recent' | 'likes' = 'recent'
+) => {
   try {
-    const response = await postApi.get(`/get-post`);
-    console.log("service", response.data);
+    const response = await postApi.get('/get-post', {
+      params: {
+        page,
+        limit,
+        sortBy,
+      },
+    });
+
     return response.data;
   } catch (error: any) {
-    console.error("service error", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || 'post failed');
+    throw new Error(
+      error.response?.data?.message || 'post fetch failed'
+    );
   }
 };
 
