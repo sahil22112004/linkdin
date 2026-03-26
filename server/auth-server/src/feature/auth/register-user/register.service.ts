@@ -20,7 +20,7 @@ export class registerUserService {
             const userRepository =  manager.getRepository(User);
             const outBoxRepository = manager.getRepository(UsersOutbox)
 
-            const { email, firebase_id } = dto
+            const { email, firebase_id ,fullname  } = dto
             const existing = await userRepository.findOne({ where: { firebase_id: firebase_id } })
             if (existing) {
                 throw new HttpException('user already existed', 404);
@@ -35,7 +35,8 @@ export class registerUserService {
             const outbox = outBoxRepository.create({
                 Payload:{
                     user_Id:firebase_id,
-                    email:email
+                    email:email,
+                    fullName:fullname
                 }
             })
 

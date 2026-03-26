@@ -1,31 +1,62 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { GoogleAuthDto } from '../../../domain/dto/googleUser.dto';
 import { User } from '../../../domain/entities/user.entity';
 import { adminAuth } from '../../../infrastructure/firebase/firebaseAdmin';
-import { Repository } from 'typeorm';
+import { UsersOutbox } from 'src/domain/entities/userOutBox.entity';
 
 @Injectable()
 export class GoogleLoginService {
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-    ) { }
+    constructor(private dataSource: DataSource) {}
+
     async registerUser(dto: GoogleAuthDto) {
-        const { email, firebase_id, token } = dto
-        const decodedToken = await adminAuth.verifyIdToken(token);
-        if(decodedToken.email !== email){
-            throw new HttpException('token do not match the given email', 404);
-        }
-        const existing = await this.userRepository.findOne({ where: { firebase_id: firebase_id } })
-        console.log(existing)
-        if (existing) {
-            return {message:'login successfully',user:existing}
-        }
-        const User = this.userRepository.create({
-            firebase_id,
-            email
-        })
-        const userInfo = await this.userRepository.save(User)
-        return { message: 'user register successfully', user:userInfo };
+        return this.dataSource.transaction(async (manager) => {
+            const userRepository = manager.getRepository(User);
+            const outBoxRepository = manager.getRepository(UsersOutbox);
+
+            const { email, firebase_id, token, fullname } = dto;
+
+            const decodedToken = await adminAuth.verifyIdToken(token);
+
+            if (!decodedToken.email || decodedToken.email !== email) {
+                throw new HttpException(
+                    'Token email does not match provided email',
+                    HttpStatus.UNAUTHORIZED
+                );
+            }
+
+            const existingUser = await userRepository.findOne({
+                where: { firebase_id },
+            });
+
+            if (existingUser) {
+                return {
+                    message: 'login successfully',
+                    user: existingUser,
+                };
+            }
+
+            const newUser = userRepository.create({
+                firebase_id,
+                email,
+            });
+
+            const savedUser = await userRepository.save(newUser);
+
+            const outbox = outBoxRepository.create({
+                Payload: {
+                    user_Id: firebase_id,
+                    email: email,
+                    fullName: fullname,
+                },
+            });
+
+            await outBoxRepository.save(outbox);
+
+            return {
+                message: 'user register successfully',
+                user: savedUser,
+            };
+        });
     }
 }

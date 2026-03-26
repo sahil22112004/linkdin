@@ -9,6 +9,8 @@ import { User } from "../../../domain/entities/user.entity";
 import { CreateUserService } from "./createUser.service";
 import { Follow } from "../../../domain/entities/follow.entity";
 import { Connection } from "../../../domain/entities/connection.entity";
+import { Experence } from "../../../domain/entities/experence.entity";
+import { Education } from "../../../domain/entities/education.entity";
 
 config()
 
@@ -22,7 +24,7 @@ config()
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, UserInbox,Follow,Connection],
+      entities: [User, UserInbox,Follow,Connection ,Education,Experence],
       synchronize: false,
     }),
   ],

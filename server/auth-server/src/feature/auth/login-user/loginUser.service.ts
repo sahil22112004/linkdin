@@ -11,7 +11,7 @@ export class loginUserService {
          @InjectRepository(User) private userRepository: Repository<User>,
      ) { }
      async loginUser(dto: LoginAuthDto) {
-         const { email, token } = dto
+         const { email, token  } = dto
          console.log("email is ",email)
          const decodedToken = await adminAuth.verifyIdToken(token);
          if(decodedToken.email !== email){

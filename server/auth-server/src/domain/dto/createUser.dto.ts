@@ -10,8 +10,7 @@ export class CreateAuthDto {
     @IsString({message:'firebase id enter only string'})
     firebase_id:string
 
-    // @IsString({message:'full name enter only string'})
-    // @IsOptional()
-    // fullname:string
+    @IsString({message:'full name enter only string'})
+    fullname:string
 
 }

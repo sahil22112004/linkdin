@@ -16,8 +16,11 @@ export class CreateUserService {
     console.log("user is",userInfo)
     const createdUser = this.userRepo.create({
         id:userInfo.user_Id,
-        email:userInfo.email
+        email:userInfo.email,
+        fullname : userInfo.fullName
+        
     })
+    console.log("craete d sa", createdUser)
 
     await this.userRepo.save(createdUser)
 
